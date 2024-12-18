@@ -1,4 +1,3 @@
-
 import SwiftUI
 import AVFoundation
 
@@ -27,10 +26,14 @@ struct PermissionView: View {
         
         // Check if VoiceOver is enabled
         if !UIAccessibility.isVoiceOverRunning {
-            showVoiceOverAlert = true
-            accessibilityPermissionGranted = false
+            DispatchQueue.main.async {
+                showVoiceOverAlert = true
+                accessibilityPermissionGranted = false
+            }
         } else {
-            accessibilityPermissionGranted = true
+            DispatchQueue.main.async {
+                accessibilityPermissionGranted = true
+            }
         }
     }
     
@@ -38,138 +41,141 @@ struct PermissionView: View {
         VStack(spacing: 20) {
             // Title
             Text("الأذونات المطلوبة")
-                .font(.system(size: 43))
+                .font(.system(size: 42))
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .offset(y: 77)
+                .offset(y: 90)
+                .padding(.horizontal, 20)
             
             // Subtitle
             Text("السماح بالوصول إلى الكاميرا والميكروفون لاستخدام كبسولة والاستفادة من التطبيق بأكبر قدر ممكن.")
                 .multilineTextAlignment(.center)
                 .font(.system(size: 20))
-                .padding(.horizontal, 20)
-                .offset(y: 77)
+                .padding(.horizontal,4 )
+                .offset(y: 90)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 10)
             
             Spacer(minLength: 20)
             
             // Permissions List
-            HStack(alignment: .top, spacing: 10) {
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 5) {
-                    Text("الوصول إلى الكاميرا")
-                        .font(.system(size: 20, weight: .bold))
-                        .multilineTextAlignment(.trailing)
-                        .foregroundColor(.black)
-                    
-                    Text("استخدم الكاميرا الخاصة بك لمسح عينة الدواء المطلوبة والتعرف عليها.")
-                        .font(.system(size: 16))
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.trailing)
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                
-                ZStack {
-                    Image(systemName: "video.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(Color(red: 0.173, green: 0.663, blue: 0.737)) // #2CA9BC
-                    
-                    if let granted = cameraPermissionGranted {
-                        Image(systemName: granted ? "checkmark.circle.fill" : "xmark.circle.fill")
+            VStack(spacing: 20) {
+                // Camera Access
+                HStack {
+                    // Camera icon on the right
+                    ZStack {
+                        Image(systemName: "video.circle.fill")
                             .resizable()
-                            .frame(width: 24, height: 24) // Adjust size as needed
-                            .foregroundColor(granted ?
-                                Color(red: 0.157, green: 0.655, blue: 0.271) : // #28A745
-                                Color(red: 0.827, green: 0.184, blue: 0.184)   // #D32F2F
-                            )
-                            .offset(x: 20, y: 20)
-
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(Color(red: 0.173, green: 0.663, blue: 0.737))
+                        
+                        if let granted = cameraPermissionGranted {
+                            Image(systemName: granted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(granted ? Color(red: 0.157, green: 0.655, blue: 0.271) : Color(red: 0.827, green: 0.184, blue: 0.184))
+                                .offset(x: 20, y: 20)
+                        }
                     }
-                }
-                .frame(width: 70, height: 70) // Fixed frame size to prevent shifting
-            }
-            
-            // Microphone Access
-            HStack(alignment: .top, spacing: 10) {
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 5) {
-                    Text("الوصول إلى الميكروفون")
-                        .font(.system(size: 20, weight: .bold))
-                        .multilineTextAlignment(.trailing)
-                        .foregroundColor(.black)
+                    .frame(width: 70, height: 70)
                     
-                    Text("استخدم الميكروفون الخاص بك لطلب المساعدة.")
-                        .font(.system(size: 16))
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.trailing)
+                    // Text on the left
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("الوصول إلى الكاميرا")
+                            .font(.system(size: 20, weight: .bold))
+                            .multilineTextAlignment(.leading)
+                            .foregroundColor(.black)
+                        
+                        Text("استخدم الكاميرا الخاصة بك لمسح عينة الدواء المطلوبة والتعرف عليها.")
+                            .font(.system(size: 16))
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.horizontal, 20)
+                .offset(y: -20)
                 
-                ZStack {
-                    Image(systemName: "microphone.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(Color(red: 0.173, green: 0.663, blue: 0.737)) // #2CA9BC
-                    
-                    if let granted = microphonePermissionGranted {
-                        Image(systemName: granted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                // Microphone Access
+                HStack {
+                    // Microphone icon on the right
+                    ZStack {
+                        Image(systemName: "microphone.circle.fill")
                             .resizable()
-                            .frame(width: 24, height: 24) // Adjust size as needed
-                            .foregroundColor(granted ?
-                                Color(red: 0.157, green: 0.655, blue: 0.271) : // #28A745
-                                Color(red: 0.827, green: 0.184, blue: 0.184)   // #D32F2F
-                            )
-                            .offset(x: 20, y: 20)
-
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(Color(red: 0.173, green: 0.663, blue: 0.737))
+                        
+                        if let granted = microphonePermissionGranted {
+                            Image(systemName: granted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(granted ? Color(red: 0.157, green: 0.655, blue: 0.271) : Color(red: 0.827, green: 0.184, blue: 0.184))
+                                .offset(x: 20, y: 20)
+                        }
                     }
-                }
-                .frame(width: 70, height: 70) // Fixed frame size to prevent shifting
-            }
-            
-            // Accessibility Section
-            HStack(alignment: .top, spacing: 10) {
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 5) {
-                    Text("الوصول إلى التعليق الصوتي")
-                        .font(.system(size: 20, weight: .bold))
-                        .multilineTextAlignment(.trailing)
-                        .foregroundColor(.black)
+                    .frame(width: 70, height: 70)
                     
-                    Text("استخدم ميزة الـ VoiceOver لتمكين التطبيق من قراءة النصوص بصوت عالٍ.")
-                        .font(.system(size: 16))
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.trailing)
+                    // Text on the left
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("الوصول إلى الميكروفون")
+                            .font(.system(size: 20, weight: .bold))
+                            .multilineTextAlignment(.leading)
+                            .foregroundColor(.black)
+                        
+                        Text("استخدم الميكروفون الخاص بك لطلب المساعدة.")
+                            .font(.system(size: 16))
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.horizontal, 20)
+                .offset(y: -20)
                 
-                ZStack {
-                    Image(systemName: "accessibility.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(Color(red: 0.173, green: 0.663, blue: 0.737)) // #2CA9BC
-                    
-                    if let granted = accessibilityPermissionGranted {
-                        Image(systemName: granted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                // Accessibility Section
+                HStack {
+                    // Accessibility icon on the right
+                    ZStack {
+                        Image(systemName: "accessibility.fill")
                             .resizable()
-                            .frame(width: 24, height: 24) // Adjust size as needed
-                            .foregroundColor(granted ?
-                                Color(red: 0.157, green: 0.655, blue: 0.271) : // #28A745
-                                Color(red: 0.827, green: 0.184, blue: 0.184)   // #D32F2F
-                            )
-                            .offset(x: 20, y: 20)
-
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(Color(red: 0.173, green: 0.663, blue: 0.737))
+                        
+                        if let granted = accessibilityPermissionGranted {
+                            Image(systemName: granted ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(granted ? Color(red: 0.157, green: 0.655, blue: 0.271) : Color(red: 0.827, green: 0.184, blue: 0.184))
+                                .offset(x: 20, y: 20)
+                        }
                     }
+                    .frame(width: 70, height: 70)
+                    
+                    // Text on the left
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("الوصول إلى التعليق الصوتي")
+                            .font(.system(size: 20, weight: .bold))
+                            .multilineTextAlignment(.leading)
+                            .foregroundColor(.black)
+                        
+                        Text("استخدم ميزة الـ VoiceOver لتمكين التطبيق من قراءة النصوص بصوت عالٍ.")
+                            .font(.system(size: 16))
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(width: 70, height: 70) // Fixed frame size to prevent shifting
+                .padding(.horizontal, 20)
+                .offset(y: -20)
             }
-            
             
             Spacer()
             
+            // Continue Button
             Button(action: {
                 requestPermissions() // Call the request permissions function to trigger pop-ups
             }) {
@@ -180,11 +186,10 @@ struct PermissionView: View {
                     .background(Color(red: 0.173, green: 0.663, blue: 0.737)) // #2CA9BC
                     .foregroundColor(.white)
                     .cornerRadius(10)
-                    .offset(y: -45) // Apply a slight upward offset
+                    .offset(y: -80) // Apply a slight upward offset
             }
             .padding(.horizontal, 20)
             
-        
             // Show VoiceOver Permission Alert
             if showVoiceOverAlert {
                 Text("يرجى تمكين VoiceOver في إعدادات الجهاز.")
@@ -195,7 +200,8 @@ struct PermissionView: View {
                     .accessibilityLabel("VoiceOver Permission Required")
             }
         }
-        .padding()
+        .padding(.horizontal, 20) // Add global margin on both sides of the screen
+        .navigationBarBackButtonHidden(true) // Hide back button in PermissionView
     }
 }
 

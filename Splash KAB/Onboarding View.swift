@@ -111,7 +111,7 @@ struct OnboardingView: View {
                 .padding(.trailing, 17) // Ensures proper space on the right for RTL layout
                 
                 // Next Button (التالي)
-                NavigationLink(destination: StartPageView()) { // Connect the button to the third page
+                NavigationLink(destination: StartPageView()) { // Connect the button to the StartPageView
                     Text(NSLocalizedString("التالي", comment: "Next button text"))
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.white)
@@ -127,23 +127,19 @@ struct OnboardingView: View {
             }
             
             // Clickable "تخطي" text positioned on the top-left
-            HStack {
-                Button(action: {
-                    print("Skip tapped!")
-                }) {
-                    Text(NSLocalizedString("تخطي", comment: "Skip onboarding"))
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(Color(hex: "#2CA9BC"))
-                        .padding()
-                }
-                .position(x: 70, y: 25)
+            NavigationLink(destination: PermissionView()) { // Navigate to PermissionView when "تخطي" is tapped
+                Text(NSLocalizedString("تخطي", comment: "Skip onboarding"))
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(Color(hex: "#2CA9BC"))
+                    .padding()
             }
+            .position(x: 70, y: 25)
         }
         .padding()
         .background(Color.white)
         .cornerRadius(10)
         .frame(maxHeight: .infinity)
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden(true) // Hide back button from the navigation bar
     }
 }
 

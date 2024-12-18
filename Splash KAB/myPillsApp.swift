@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-@main
 struct myPillsApp: App {
     var body: some Scene {
         WindowGroup {
