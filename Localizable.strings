@@ -1,0 +1,43 @@
+/* Onboarding Screen */
+"Welcome to Capsule" = "Welcome to Capsule";
+"Capsule App Name" = "Capsule";
+"We are here to help you identify your medicine easily and safely" = "We are here to help you identify your medicine easily and safely";
+"Checkmark Icon" = "Checkmark Icon";
+"Each medicine has a name, composition, and different benefit. Let us help you identify your medicines with fast scanning." = "Each medicine has a name, composition, and different benefit. Let us help you identify your medicines with fast scanning.";
+"Pill Icon" = "Pill Icon";
+"Our app relies on voice assistance to guide you at each step. If you need voice assistance, just say ‘help me’." = "Our app relies on voice assistance to guide you at each step. If you need voice assistance, just say ‘help me’.";
+"Microphone Icon" = "Microphone Icon";
+"For the best experience, please enable some permissions like camera and sound. This will enable you to use the full features of our app." = "For the best experience, please enable some permissions like camera and sound. This will enable you to use the full features of our app.";
+"Thumbs Up Icon" = "Thumbs Up Icon";
+"Next Button" = "Next Button";
+"Skip Button" = "Skip Button";
+
+/* Hints */
+"Describes the purpose of the Capsule app." = "Describes the purpose of the Capsule app.";
+"Describes how the app helps identify medicines." = "Describes how the app helps identify medicines.";
+"Explains the voice command feature of the app." = "Explains the voice command feature of the app.";
+"Explains the permissions needed for full app functionality." = "Explains the permissions needed for full app functionality.";
+"Navigates to the next page." = "Navigates to the next page.";
+"Skips the onboarding process." = "Skips the onboarding process.";
+
+/* Onboarding Screen */
+"Welcome to Capsule" = "مرحباً بك في كبسولة";
+"Capsule App Name" = "كبسولة";
+"We are here to help you identify your medicine easily and safely" = "نحن هنا لمساعدتك في التعرف على أدويتك بسهولة وأمان";
+"Checkmark Icon" = "رمز العلامة الصح";
+"Each medicine has a name, composition, and different benefit. Let us help you identify your medicines with fast scanning." = "كل دواء له اسم، تركيبة، وفائدة مختلفة. دعنا نساعدك في التعرف على أدويتك من خلال تقنية مسح سريعة وسهلة";
+"Pill Icon" = "رمز الحبة";
+"Our app relies on voice assistance to guide you at each step. If you need voice assistance, just say ‘help me’." = "تطبيقنا يعتمد على الصوت لمساعدتك في كل خطوة. إذا كنت بحاجة إلى مساعدة صوتية، فقط قل ‘ساعدني’";
+"Microphone Icon" = "رمز الميكروفون";
+"For the best experience, please enable some permissions like camera and sound. This will enable you to use the full features of our app." = "لضمان أفضل تجربة، يرجى تفعيل بعض الأذونات مثل الكاميرا والصوت. هذا سيمكنك من استخدام تطبيقنا بشكل كامل";
+"Thumbs Up Icon" = "رمز الإعجاب";
+"Next Button" = "التالي";
+"Skip Button" = "تخطي";
+
+/* Hints */
+"Describes the purpose of the Capsule app." = "يصف غرض تطبيق كبسولة";
+"Describes how the app helps identify medicines." = "يصف كيف يساعد التطبيق في التعرف على الأدوية";
+"Explains the voice command feature of the app." = "يشرح ميزة الأوامر الصوتية في التطبيق";
+"Explains the permissions needed for full app functionality." = "يشرح الأذونات المطلوبة لاستخدام كامل وظائف التطبيق";
+"Navigates to the next page." = "ينتقل إلى الصفحة التالية";
+"Skips the onboarding process." = "يتخطى عملية التعريف";
