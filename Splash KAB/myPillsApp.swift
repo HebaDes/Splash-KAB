@@ -1,8 +1,17 @@
 //
 //  myPillsApp.swift
-//  Splash KAB
+//  myPills
 //
-//  Created by Reeman on 18/12/2024.
+//  Created by Reeman on 15/12/2024.
 //
 
-import Foundation
+import SwiftUI
+
+@main
+struct myPillsApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}
