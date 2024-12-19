@@ -5,7 +5,7 @@ import Vision
 
 struct ScanView: View {
     @StateObject private var cameraModel = Camera1ViewModel()
-    @State private var prediction: String = "Scanning..."
+    @State private var prediction: String = "جارٍ المسح..."
     @State private var detectedObject: String = ""
     @State private var showSheet: Bool = false // State to manage sheet visibility
 
@@ -41,7 +41,7 @@ struct ScanView: View {
     private func classifyImage(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let model = try? VNCoreMLModel(for: KabsolaApp().model) else {
-                print("Failed to load CoreML model.")
+                print("فشل في تحميل نموذج CoreML.")
                 return
             }
             
@@ -52,12 +52,12 @@ struct ScanView: View {
                         let confidence = topResult.confidence * 100
                         if confidence >= 99 {
                             detectedObject = topResult.identifier
-                            prediction = "Detected: \(detectedObject) (\(Int(confidence))%)"
+                            prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
                             showSheet = true // Show the sheet
                         } else if confidence >= 70 {
-                            prediction = "Scanning... Please wait (\(Int(confidence))%)"
+                            prediction = "جارٍ المسح... الرجاء الانتظار (\(Int(confidence))%)"
                         } else {
-                            prediction = "Object is too far away (\(Int(confidence))%)"
+                            prediction = "الكائن بعيد جدًا (\(Int(confidence))%)"
                         }
                     }
                 }
@@ -74,18 +74,18 @@ struct DetectedObjectSheet: View {
 
     var body: some View {
         VStack {
-            Text("Object Detected")
+            Text("تم الكشف عن الكائن")
                 .font(.largeTitle)
                 .padding()
-            Text("You detected: \(objectName)")
+            Text("تم الكشف عن: \(objectName)")
                 .font(.title2)
                 .padding()
-            Button("Dismiss") {
-                // Add any additional functionality here
-                UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
+            Button("إغلاق") {
+                // Dismiss the sheet
+                UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true)
             }
             .padding()
-            .background(Color.blue)
+            .background(Color(hex: "#2CA9BC"))
             .foregroundColor(.white)
             .cornerRadius(10)
         }
@@ -122,7 +122,7 @@ class Camera1ViewController: UIViewController, AVCaptureVideoDataOutputSampleBuf
         guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
               let videoInput = try? AVCaptureDeviceInput(device: videoDevice),
               captureSession.canAddInput(videoInput) else {
-            print("Failed to access camera.")
+            print("فشل في الوصول إلى الكاميرا.")
             return
         }
         captureSession.addInput(videoInput)
@@ -171,10 +171,13 @@ class Camera1ViewModel: ObservableObject {
             device.torchMode = on ? .on : .off
             device.unlockForConfiguration()
         } catch {
-            print("Error toggling flash: \(error.localizedDescription)")
+            print("خطأ في تشغيل/إيقاف الفلاش: \(error.localizedDescription)")
         }
     }
 }
+
+// Extension for Hex Color in SwiftUI
+
 
 #Preview {
     ScanView()
