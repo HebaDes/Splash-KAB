@@ -127,7 +127,7 @@ struct OnboardingView: View {
             }
             
             // Clickable "تخطي" text positioned on the top-left
-            NavigationLink(destination: PermissionView()) { // Navigate to PermissionView when "تخطي" is tapped
+            NavigationLink(destination: ScanView()) { // Navigate to PermissionView when "تخطي" is tapped
                 Text(NSLocalizedString("تخطي", comment: "Skip onboarding"))
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(Color(hex: "#2CA9BC"))

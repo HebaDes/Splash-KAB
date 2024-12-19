@@ -2,6 +2,8 @@ import SwiftUI
 
 struct StartPageView: View {
     var body: some View {
+        @State var ShowUp = false
+
         ZStack {
             Color.white
                 .edgesIgnoringSafeArea(.all)
@@ -29,7 +31,7 @@ struct StartPageView: View {
                 Spacer()
 
                 // NavigationLink to PermissionView
-                NavigationLink(destination: PermissionView()) {
+                NavigationLink(destination: ScanView()) {
                     Text("ابدأ")
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.white)
