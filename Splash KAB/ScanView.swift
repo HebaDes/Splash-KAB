@@ -13,13 +13,13 @@ struct ScanView: View {
     @State private var newDetectedObject: String = ""
     @State private var newShowSheet: Bool = false // State to manage new model sheet visibility
 
-    // Pill details dictionary
-    let pillDetails: [String: String] = [
-        "Panadol": "Panadol: Reduces fever and alleviates pain.",
-        "Ibuprofen": "Ibuprofen: Anti-inflammatory drug.",
-        "Megamox": "Megamox: Antibiotic used to treat infections.",
-        "Unknown": "Unknown: No usage available."
-    ]
+    // Pill details dictionary with localized strings
+       let pillDetails: [String: String] = [
+           "Panadol": NSLocalizedString("Panadol", comment: "Panadol description"),
+           "Ibuprofen": NSLocalizedString("Ibuprofen", comment: "Ibuprofen description"),
+           "Megamox": NSLocalizedString("Megamox", comment: "Megamox description"),
+           "Unknown": NSLocalizedString("Unknown", comment: "Unknown pill description")
+       ]
 
     var body: some View {
         ZStack {
