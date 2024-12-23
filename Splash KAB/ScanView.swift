@@ -5,19 +5,31 @@ import Vision
 
 struct ScanView: View {
     @StateObject private var cameraModel = Camera1ViewModel()
-    @State private var prediction: String = "جارٍ المسح..."
+    @State private var prediction: String = "جارٍ المسح..." // For the existing model
     @State private var detectedObject: String = ""
     @State private var showSheet: Bool = false // State to manage sheet visibility
+
+    @State private var newPrediction: String = "جارٍ المسح باستخدام النموذج الجديد..." // For the new model
+    @State private var newDetectedObject: String = ""
+    @State private var newShowSheet: Bool = false // State to manage new model sheet visibility
 
     var body: some View {
         ZStack {
             Camera1View(cameraModel: cameraModel)
             VStack {
                 Spacer()
-                // Display the detected object's name or scanning status
+                // Display the detected object's name or scanning status (existing model)
                 Text(prediction)
                     .padding()
                     .background(Color.black.opacity(0.7))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding(.bottom, 10)
+                
+                // Display the detected object's name or scanning status (new model)
+                Text(newPrediction)
+                    .padding()
+                    .background(Color.gray.opacity(0.7))
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding(.bottom, 20)
@@ -25,7 +37,8 @@ struct ScanView: View {
         }
         .onAppear {
             cameraModel.startSession { image in
-                classifyImage(image: image)
+                classifyImageUsingOldModel(image: image) // Existing model
+                classifyImageUsingNewModel(image: image) // New model
             }
             cameraModel.toggleFlash(on: true) // Turn flashlight ON
         }
@@ -36,12 +49,15 @@ struct ScanView: View {
         .sheet(isPresented: $showSheet) {
             DetectedObjectSheet(objectName: detectedObject)
         }
+        .sheet(isPresented: $newShowSheet) {
+            NewDetectedObjectSheet(objectName: newDetectedObject)
+        }
     }
-    
-    private func classifyImage(image: CGImage) {
+
+    private func classifyImageUsingOldModel(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let model = try? VNCoreMLModel(for: KabsolaApp().model) else {
-                print("فشل في تحميل نموذج CoreML.")
+                print("فشل في تحميل نموذج CoreML القديم.")
                 return
             }
             
@@ -53,11 +69,42 @@ struct ScanView: View {
                         if confidence >= 99 {
                             detectedObject = topResult.identifier
                             prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
-                            showSheet = true // Show the sheet
+                            showSheet = true // Show the sheet for old model
                         } else if confidence >= 70 {
                             prediction = "جارٍ المسح... الرجاء الانتظار (\(Int(confidence))%)"
                         } else {
                             prediction = "الكائن بعيد جدًا (\(Int(confidence))%)"
+                        }
+                    }
+                }
+            }
+            
+            let handler = VNImageRequestHandler(cgImage: image, options: [:])
+            try? handler.perform([request])
+        }
+    }
+
+    private func classifyImageUsingNewModel(image: CGImage) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard let model = try? VNCoreMLModel(for: pillDetect(configuration: MLModelConfiguration()).model) else {
+                print("Failed to load the pillDetection model.")
+                return
+            }
+
+            
+            let request = VNCoreMLRequest(model: model) { request, error in
+                if let results = request.results as? [VNClassificationObservation],
+                   let topResult = results.first {
+                    DispatchQueue.main.async {
+                        let confidence = topResult.confidence * 100
+                        if confidence >= 99 {
+                            newDetectedObject = topResult.identifier
+                            newPrediction = "تم الكشف عن: \(newDetectedObject) (\(Int(confidence))%)"
+                            newShowSheet = true // Show the sheet for new model
+                        } else if confidence >= 70 {
+                            newPrediction = "جارٍ المسح باستخدام النموذج... الرجاء الانتظار (\(Int(confidence))%)"
+                        } else {
+                            newPrediction = "الكائن بعيد جدًا بالنسبة للنموذج الجديد (\(Int(confidence))%)"
                         }
                     }
                 }
@@ -74,7 +121,7 @@ struct DetectedObjectSheet: View {
 
     var body: some View {
         VStack {
-            Text("تم الكشف عن الكائن")
+            Text("تم الكشف عن الكائن بواسطة النموذج")
                 .font(.largeTitle)
                 .padding()
             Text("تم الكشف عن: \(objectName)")
@@ -92,6 +139,31 @@ struct DetectedObjectSheet: View {
         .padding()
     }
 }
+
+struct NewDetectedObjectSheet: View {
+    let objectName: String
+
+    var body: some View {
+        VStack {
+            Text("تم الكشف عن الكائن بواسطة النموذج")
+                .font(.largeTitle)
+                .padding()
+            Text("تم الكشف عن: \(objectName)")
+                .font(.title2)
+                .padding()
+            Button("إغلاق") {
+                // Dismiss the sheet
+                UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true)
+            }
+            .padding()
+            .background(Color(hex: "#2CA9BC"))
+            .foregroundColor(.white)
+            .cornerRadius(10)
+        }
+        .padding()
+    }
+}
+
 
 struct Camera1View: UIViewControllerRepresentable {
     @ObservedObject var cameraModel: Camera1ViewModel
