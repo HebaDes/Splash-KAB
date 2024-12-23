@@ -41,3 +41,15 @@
 "Explains the permissions needed for full app functionality." = "يشرح الأذونات المطلوبة لاستخدام كامل وظائف التطبيق";
 "Navigates to the next page." = "ينتقل إلى الصفحة التالية";
 "Skips the onboarding process." = "يتخطى عملية التعريف";
+
+/*medicines*/
+"Panadol" = "Panadol: Reduces fever and alleviates pain.";
+"Ibuprofen" = "Ibuprofen: Anti-inflammatory drug.";
+"Megamox" = "Megamox: Antibiotic used to treat infections.";
+"Unknown" = "Unknown: No usage available.";
+
+"Panadol" = "بنادول: يخفض الحمى ويخفف الألم.";
+"Ibuprofen" = "ايبوبروفين: دواء مضاد للالتهابات.";
+"Megamox" = "ميجاموكس: مضاد حيوي لعلاج الالتهابات.";
+"Unknown" = "غير معروف: لا تتوفر معلومات عن الاستخدام.";
+

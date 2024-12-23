@@ -213,6 +213,6 @@
 //
 //struct PermissionsView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        PermissionView()
+//        PermissionView(ShowUp: <#Binding<Bool>#>)
 //    }
 //}
