@@ -1,9 +1,10 @@
 import SwiftUI
 
 struct OnboardingView: View {
+   // @State private var isNextPageActive = false
+    //@State private var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
     @State private var isNextPageActive = false
-    @State private var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
-    
+       @State private var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasSeenOnboarding") // Check UserDefaults
     var body: some View {
         ZStack {
             VStack {
@@ -111,7 +112,27 @@ struct OnboardingView: View {
                 .padding(.trailing, 17) // Ensures proper space on the right for RTL layout
                 
                 // Next Button (التالي)
-                NavigationLink(destination: StartPageView()) { // Connect the button to the StartPageView
+//                NavigationLink(destination: StartPageView()) { // Connect the button to the StartPageView
+//                    
+//                    Text(NSLocalizedString("التالي", comment: "Next button text"))
+//                        .font(.system(size: 20, weight: .bold))
+//                        .foregroundColor(.white)
+//                        .frame(maxWidth: .infinity)
+//                        .padding()
+//                        .background(Color(hex: "#2CA9BC"))
+//                        .cornerRadius(10)
+//                        .padding(.top, 30)
+//                }
+//                .padding(.horizontal, 25)
+//                
+//                Spacer()
+                
+                
+                // Next Button (التالي)
+                Button(action: {
+                    UserDefaults.standard.set(true, forKey: "hasSeenOnboarding") // Save flag
+                    isNextPageActive = true
+                }) {
                     Text(NSLocalizedString("التالي", comment: "Next button text"))
                         .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.white)
@@ -122,7 +143,7 @@ struct OnboardingView: View {
                         .padding(.top, 30)
                 }
                 .padding(.horizontal, 25)
-                
+
                 Spacer()
             }
             

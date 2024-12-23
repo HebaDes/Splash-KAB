@@ -4,10 +4,16 @@ import SwiftUI
 struct SplashView: View {
     @State private var animateScale: CGFloat = 1.0 // Animation state for scaling effect
     @State private var isNavigationActive = false // State to trigger navigation
-    
+    @State private var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
+
     var body: some View {
         NavigationView {
             ZStack {
+                if hasSeenOnboarding {
+                    StartPageView()
+                       } else {
+                           OnboardingView()
+                       }
                 // Background image covering the entire screen
                 Image("Background")
                     .resizable()
