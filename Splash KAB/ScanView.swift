@@ -13,12 +13,20 @@ struct ScanView: View {
     @State private var newDetectedObject: String = ""
     @State private var newShowSheet: Bool = false // State to manage new model sheet visibility
 
+    // Pill details dictionary
+    let pillDetails: [String: String] = [
+        "Panadol": "Panadol: Reduces fever and alleviates pain.",
+        "Ibuprofen": "Ibuprofen: Anti-inflammatory drug.",
+        "Megamox": "Megamox: Antibiotic used to treat infections.",
+        "Unknown": "Unknown: No usage available."
+    ]
+
     var body: some View {
         ZStack {
             Camera1View(cameraModel: cameraModel)
             VStack {
                 Spacer()
-                // Display the detected object's name or scanning status (existing model)
+
                 Text(prediction)
                     .padding()
                     .background(Color.black.opacity(0.7))
@@ -26,7 +34,7 @@ struct ScanView: View {
                     .cornerRadius(10)
                     .padding(.bottom, 10)
                 
-                // Display the detected object's name or scanning status (new model)
+
                 Text(newPrediction)
                     .padding()
                     .background(Color.gray.opacity(0.7))
@@ -37,8 +45,8 @@ struct ScanView: View {
         }
         .onAppear {
             cameraModel.startSession { image in
-                classifyImageUsingOldModel(image: image) // Existing model
-                classifyImageUsingNewModel(image: image) // New model
+                classifyImageUsingOldModel(image: image)
+                classifyImageUsingNewModel(image: image)
             }
             cameraModel.toggleFlash(on: true) // Turn flashlight ON
         }
@@ -47,10 +55,10 @@ struct ScanView: View {
             cameraModel.toggleFlash(on: false) // Turn flashlight OFF
         }
         .sheet(isPresented: $showSheet) {
-            DetectedObjectSheet(objectName: detectedObject)
+            DetectedObjectSheet(objectName: detectedObject, pillDetails: pillDetails)
         }
         .sheet(isPresented: $newShowSheet) {
-            NewDetectedObjectSheet(objectName: newDetectedObject)
+            NewDetectedObjectSheet(objectName: newDetectedObject, pillDetails: pillDetails)
         }
     }
 
@@ -118,6 +126,7 @@ struct ScanView: View {
 
 struct DetectedObjectSheet: View {
     let objectName: String
+    let pillDetails: [String: String] // Added pill details dictionary
 
     var body: some View {
         VStack {
@@ -126,6 +135,9 @@ struct DetectedObjectSheet: View {
                 .padding()
             Text("تم الكشف عن: \(objectName)")
                 .font(.title2)
+                .padding()
+            Text(pillDetails[objectName] ?? "No details available.") // Added to show pill details
+                .font(.body)
                 .padding()
             Button("إغلاق") {
                 // Dismiss the sheet
@@ -142,6 +154,7 @@ struct DetectedObjectSheet: View {
 
 struct NewDetectedObjectSheet: View {
     let objectName: String
+    let pillDetails: [String: String] // Added pill details dictionary
 
     var body: some View {
         VStack {
@@ -150,6 +163,9 @@ struct NewDetectedObjectSheet: View {
                 .padding()
             Text("تم الكشف عن: \(objectName)")
                 .font(.title2)
+                .padding()
+            Text(pillDetails[objectName] ?? "No details available.") // Added to show pill details
+                .font(.body)
                 .padding()
             Button("إغلاق") {
                 // Dismiss the sheet
