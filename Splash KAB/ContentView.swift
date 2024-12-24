@@ -1,86 +1,83 @@
 import SwiftUI
 
-// SplashView: The initial splash screen with animation
 struct SplashView: View {
-    @State private var animateScale: CGFloat = 1.0 // Animation state for scaling effect
-    @State private var isNavigationActive = false // State to trigger navigation
+    @State private var animateScale: CGFloat = 1.0
+    @State private var isNavigationActive = false
     @State private var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
 
     var body: some View {
         NavigationView {
             ZStack {
-                if hasSeenOnboarding {
-                    StartPageView()
-                       } else {
-                           OnboardingView()
-                       }
-                // Background image covering the entire screen
                 Image("Background")
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
                     .padding(EdgeInsets(top: -33, leading: -200, bottom: -380, trailing: 0))
-                
-                // Separate stack for Patterns image
+
                 Image("Patterns")
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
                     .padding(EdgeInsets(top: -33, leading: -20, bottom: -380, trailing: 0))
-                
-                // AppIcon with heartbeat effect and Arabic text below it
+
                 ZStack {
-                    // Heartbeat effect with two circles below the AppIcon
                     Circle()
-                        .fill(Color(hex: "#00BCD4")) // First circle
+                        .fill(Color(hex: "#00BCD4"))
                         .frame(width: 160, height: 160)
                         .scaleEffect(animateScale)
-                        .opacity(2 - animateScale) // Fades out as it scales up
+                        .opacity(2 - animateScale)
                         .offset(x: -30, y: -5)
-                    
+
                     Circle()
-                        .fill(Color(hex: "#00BCD4")) // Second circle
+                        .fill(Color(hex: "#00BCD4"))
                         .frame(width: 120, height: 120)
                         .scaleEffect(animateScale)
                         .opacity(2 - animateScale)
                         .offset(x: -30, y: -5)
-                    
+
                     VStack(spacing: 20) {
-                        // AppIcon in the center of the screen
-                        Image("AppIcon") // Ensure this image exists in assets
+                        Image("AppIcon")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 200, height: 200)
-                            .offset(x: -30, y: -5) // Slightly moves AppIcon left and up
-                        
+                            .offset(x: -30, y: -5)
+
                         Text("كبسولة")
-                            .font(.system(size: 48)) // Custom font "SF Pro"
+                            .font(.system(size: 48))
                             .fontWeight(.bold)
-                            .foregroundColor(.white) // White text color
-                            .multilineTextAlignment(.center) // Center-align the text
-                            .offset(y: 50) // Adjusted to move text slightly up
-                            .offset(x: -20) // Keeps the text aligned with the AppIcon
+                            .foregroundColor(.white)
+                            .offset(y: 50)
+                            .offset(x: -20)
                     }
                     .onAppear {
                         withAnimation(Animation.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
-                            animateScale = 1.5 // Pulse effect
+                            animateScale = 1.5
                         }
-                        
-                        // Set a timer to navigate after 3 seconds
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             isNavigationActive = true
                         }
                     }
                 }
-                
-                // NavigationLink to the Onboarding view when the flag is true
+
+                // Separate the navigation destination based on the condition
                 NavigationLink(
-                    destination: OnboardingView(),
+                    destination: destinationView(),
                     isActive: $isNavigationActive
                 ) {
                     EmptyView()
                 }
             }
+        }
+    }
+
+    /// Helper function to resolve type mismatch issue by returning the appropriate view
+    @ViewBuilder
+    private func destinationView() -> some View {
+        if hasSeenOnboarding {
+            StartPageView()
+        } else {
+            OnboardingView()
         }
     }
 }
