@@ -5,21 +5,21 @@ import Vision
 
 struct ScanView: View {
     @StateObject private var cameraModel = Camera1ViewModel()
-    @State private var prediction: String = "جارٍ المسح..." // For the existing model
+    @State private var prediction: String = "جارٍ المسح..."
     @State private var detectedObject: String = ""
-    @State private var showSheet: Bool = false // State to manage sheet visibility
+    @State private var showSheet: Bool = false
+    @State private var isDetectionPaused: Bool = false
 
-    @State private var newPrediction: String = "جارٍ المسح باستخدام النموذج الجديد..." // For the new model
+    @State private var newPrediction: String = "جارٍ المسح باستخدام النموذج الجديد..."
     @State private var newDetectedObject: String = ""
-    @State private var newShowSheet: Bool = false // State to manage new model sheet visibility
+    @State private var newShowSheet: Bool = false
 
-    // Pill details dictionary with localized strings
-       let pillDetails: [String: String] = [
-           "Panadol": NSLocalizedString("Panadol", comment: "Panadol description"),
-           "Ibuprofen": NSLocalizedString("Ibuprofen", comment: "Ibuprofen description"),
-           "Megamox": NSLocalizedString("Megamox", comment: "Megamox description"),
-           "Unknown": NSLocalizedString("Unknown", comment: "Unknown pill description")
-       ]
+    let pillDetails: [String: String] = [
+        "Panadol": NSLocalizedString("Panadol", comment: "Panadol description"),
+        "Ibuprofen": NSLocalizedString("Ibuprofen", comment: "Ibuprofen description"),
+        "Megamox": NSLocalizedString("Megamox", comment: "Megamox description"),
+        "Unknown": NSLocalizedString("Unknown", comment: "Unknown pill description")
+    ]
 
     var body: some View {
         ZStack {
@@ -27,48 +27,65 @@ struct ScanView: View {
             VStack {
                 Spacer()
 
-                Text(prediction)
-                    .padding()
-                    .background(Color.black.opacity(0.7))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding(.bottom, 10)
-                
+                if !isDetectionPaused {
+                    Text(prediction)
+                        .padding()
+                        .background(Color.black.opacity(0.7))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.bottom, 10)
 
-                Text(newPrediction)
-                    .padding()
-                    .background(Color.gray.opacity(0.7))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding(.bottom, 20)
+                    Text(newPrediction)
+                        .padding()
+                        .background(Color.gray.opacity(0.7))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.bottom, 20)
+                } else {
+                    Text("الكاميرا متوقفة مؤقتًا")
+                        .padding()
+                        .background(Color.red.opacity(0.7))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.bottom, 20)
+                }
             }
         }
-        .onAppear {
+        .onAppear { // When the view appears, start the camera session
             cameraModel.startSession { image in
+                guard !isDetectionPaused else { return }// Skip detection if paused
                 classifyImageUsingOldModel(image: image)
                 classifyImageUsingNewModel(image: image)
             }
-            cameraModel.toggleFlash(on: true) // Turn flashlight ON
         }
-        .onDisappear {
+        .onDisappear {// When the view disappears, stop the camera session
             cameraModel.stopSession()
-            cameraModel.toggleFlash(on: false) // Turn flashlight OFF
         }
+        //خليت الشيت هنا تكون (٠.٧) عشان يبان انو شيت و ما يكون علئ كامل الصفحة
         .sheet(isPresented: $showSheet) {
-            DetectedObjectSheet(objectName: detectedObject, pillDetails: pillDetails)
+            DetectedObjectSheet(objectName: detectedObject, pillDetails: pillDetails) {
+                restartDetection()
+            }
+            .presentationDetents([.fraction(0.7)]) // Occupy half the screen
+            .presentationDragIndicator(.visible)  // Optional: Show a drag indicator
         }
         .sheet(isPresented: $newShowSheet) {
-            NewDetectedObjectSheet(objectName: newDetectedObject, pillDetails: pillDetails)
+            DetectedObjectSheet(objectName: newDetectedObject, pillDetails: pillDetails) {
+                restartDetection()
+            }
+            .presentationDetents([.fraction(0.7)]) // Occupy half the screen
+            .presentationDragIndicator(.visible)  // Optional: Show a drag indicator
         }
     }
+    // Classify an image using the old model
 
     private func classifyImageUsingOldModel(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let model = try? VNCoreMLModel(for: KabsolaApp().model) else {
-                print("فشل في تحميل نموذج CoreML القديم.")
+                print("Failed to load the old model.")
                 return
             }
-            
+
             let request = VNCoreMLRequest(model: model) { request, error in
                 if let results = request.results as? [VNClassificationObservation],
                    let topResult = results.first {
@@ -77,7 +94,9 @@ struct ScanView: View {
                         if confidence >= 99 {
                             detectedObject = topResult.identifier
                             prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
-                            showSheet = true // Show the sheet for old model
+                            //هنا يتعامل بالثواني ف  لو حطيتي ٦٠ يعني دقيقه و هكذا
+                            stopDetection(for: 120) // Stop for 2 minutes
+                            showSheet = true
                         } else if confidence >= 70 {
                             prediction = "جارٍ المسح... الرجاء الانتظار (\(Int(confidence))%)"
                         } else {
@@ -86,20 +105,20 @@ struct ScanView: View {
                     }
                 }
             }
-            
+
             let handler = VNImageRequestHandler(cgImage: image, options: [:])
             try? handler.perform([request])
         }
     }
+    // Classify an image using the new model
 
     private func classifyImageUsingNewModel(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let model = try? VNCoreMLModel(for: pillDetect(configuration: MLModelConfiguration()).model) else {
-                print("Failed to load the pillDetection model.")
+                print("Failed to load the new model.")
                 return
             }
 
-            
             let request = VNCoreMLRequest(model: model) { request, error in
                 if let results = request.results as? [VNClassificationObservation],
                    let topResult = results.first {
@@ -108,7 +127,8 @@ struct ScanView: View {
                         if confidence >= 99 {
                             newDetectedObject = topResult.identifier
                             newPrediction = "تم الكشف عن: \(newDetectedObject) (\(Int(confidence))%)"
-                            newShowSheet = true // Show the sheet for new model
+                            stopDetection(for: 60) // Stop for 30 seconds
+                            newShowSheet = true
                         } else if confidence >= 70 {
                             newPrediction = "جارٍ المسح باستخدام النموذج... الرجاء الانتظار (\(Int(confidence))%)"
                         } else {
@@ -117,69 +137,52 @@ struct ScanView: View {
                     }
                 }
             }
-            
+
             let handler = VNImageRequestHandler(cgImage: image, options: [:])
             try? handler.perform([request])
         }
+    }
+// فنكشن توقف ديتيكشن
+    private func stopDetection(for seconds: Int) {
+        isDetectionPaused = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(seconds)) {
+            isDetectionPaused = false
+        }
+    }
+// يسوي ريستارت للديتيكشن
+    private func restartDetection() {
+        isDetectionPaused = false
     }
 }
 
 struct DetectedObjectSheet: View {
     let objectName: String
-    let pillDetails: [String: String] // Added pill details dictionary
+    let pillDetails: [String: String]
+    let onClose: () -> Void
 
     var body: some View {
         VStack {
-            Text("تم الكشف عن الكائن بواسطة النموذج")
+            Text("تم الكشف عن الكائن")
                 .font(.largeTitle)
                 .padding()
             Text("تم الكشف عن: \(objectName)")
-                .font(.title2)
+                .font(.title)
                 .padding()
-            Text(pillDetails[objectName] ?? "No details available.") // Added to show pill details
-                .font(.body)
+            Text(pillDetails[objectName] ?? "No details available.")
+                .font(.title)
                 .padding()
-            Button("إغلاق") {
-                // Dismiss the sheet
-                UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true)
+            // في كل مره يضغط علئ الزر يشتغل الديتكشن و يطلع الشيت
+            Button("حاول مرة أخرى") {
+                onClose()
             }
-            .padding()
-            .background(Color(hex: "#2CA9BC"))
+            .padding(30)
+            .background(Color.blue)
             .foregroundColor(.white)
             .cornerRadius(10)
         }
         .padding()
     }
 }
-
-struct NewDetectedObjectSheet: View {
-    let objectName: String
-    let pillDetails: [String: String] // Added pill details dictionary
-
-    var body: some View {
-        VStack {
-            Text("تم الكشف عن الكائن بواسطة النموذج")
-                .font(.largeTitle)
-                .padding()
-            Text("تم الكشف عن: \(objectName)")
-                .font(.title2)
-                .padding()
-            Text(pillDetails[objectName] ?? "No details available.") // Added to show pill details
-                .font(.body)
-                .padding()
-            Button("إغلاق") {
-                // Dismiss the sheet
-                UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true)
-            }
-            .padding()
-            .background(Color(hex: "#2CA9BC"))
-            .foregroundColor(.white)
-            .cornerRadius(10)
-        }
-        .padding()
-    }
-}
-
 
 struct Camera1View: UIViewControllerRepresentable {
     @ObservedObject var cameraModel: Camera1ViewModel
@@ -210,7 +213,7 @@ class Camera1ViewController: UIViewController, AVCaptureVideoDataOutputSampleBuf
         guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
               let videoInput = try? AVCaptureDeviceInput(device: videoDevice),
               captureSession.canAddInput(videoInput) else {
-            print("فشل في الوصول إلى الكاميرا.")
+            print("Failed to access the camera.")
             return
         }
         captureSession.addInput(videoInput)
@@ -251,21 +254,7 @@ class Camera1ViewModel: ObservableObject {
     func stopSession() {
         session?.stopRunning()
     }
-    
-    func toggleFlash(on: Bool) {
-        guard let device = AVCaptureDevice.default(for: .video), device.hasTorch else { return }
-        do {
-            try device.lockForConfiguration()
-            device.torchMode = on ? .on : .off
-            device.unlockForConfiguration()
-        } catch {
-            print("خطأ في تشغيل/إيقاف الفلاش: \(error.localizedDescription)")
-        }
-    }
 }
-
-// Extension for Hex Color in SwiftUI
-
 
 #Preview {
     ScanView()
