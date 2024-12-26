@@ -27,7 +27,10 @@
 "Checkmark Icon" = "رمز العلامة الصح";
 "Each medicine has a name, composition, and different benefit. Let us help you identify your medicines with fast scanning." = "كل دواء له اسم، تركيبة، وفائدة مختلفة. دعنا نساعدك في التعرف على أدويتك من خلال تقنية مسح سريعة وسهلة";
 "Pill Icon" = "رمز الحبة";
-"Our app relies on voice assistance to guide you at each step. If you need voice assistance, just say ‘help me’." = "تطبيقنا يعتمد على الصوت لمساعدتك في كل خطوة. إذا كنت بحاجة إلى مساعدة صوتية، فقط قل ‘ساعدني’";
+
+/* Updated Translation */
+"Our app relies on voice assistance to guide you at each step. If you need voice assistance, just say ‘help me’." = "تطبيقنا يعتمد على الصوت لمساعدتك في كل خطوة. إذا كنت بحاجة إلى مساعدة صوتية، فقط استدعي سيري \"Siri\"";
+
 "Microphone Icon" = "رمز الميكروفون";
 "For the best experience, please enable some permissions like camera and sound. This will enable you to use the full features of our app." = "لضمان أفضل تجربة، يرجى تفعيل بعض الأذونات مثل الكاميرا والصوت. هذا سيمكنك من استخدام تطبيقنا بشكل كامل";
 "Thumbs Up Icon" = "رمز الإعجاب";
@@ -42,7 +45,7 @@
 "Navigates to the next page." = "ينتقل إلى الصفحة التالية";
 "Skips the onboarding process." = "يتخطى عملية التعريف";
 
-/*medicines*/
+/* Medicines */
 "Panadol" = "Panadol: Reduces fever and alleviates pain.";
 "Ibuprofen" = "Ibuprofen: Anti-inflammatory drug.";
 "Megamox" = "Megamox: Antibiotic used to treat infections.";
@@ -52,4 +55,3 @@
 "Ibuprofen" = "ايبوبروفين: دواء مضاد للالتهابات.";
 "Megamox" = "ميجاموكس: مضاد حيوي لعلاج الالتهابات.";
 "Unknown" = "غير معروف: لا تتوفر معلومات عن الاستخدام.";
-

@@ -8,6 +8,7 @@ struct OnboardingView: View {
             VStack {
                 Spacer().frame(height: 80)
 
+                // MARK: - Header
                 VStack(spacing: -5) {
                     Text("مرحباً بك في")
                         .font(.system(size: 48))
@@ -22,22 +23,31 @@ struct OnboardingView: View {
                         .multilineTextAlignment(.center)
                 }
 
+                // MARK: - Features List
                 VStack(alignment: .leading, spacing: 20) {
-                    OnboardingFeatureRow(icon: "checkmark.circle.fill",
-                                         text: "نحن هنا لمساعدتك في التعرف على أدويتك بسهولة وأمان.")
-                    OnboardingFeatureRow(icon: "pill.circle.fill",
-                                         text: "كل دواء له اسم، تركيبة، وفائدة مختلفة. دعنا نساعدك في التعرف على أدويتك من خلال تقنية مسح سريعة وسهلة.")
-                    OnboardingFeatureRow(icon: "mic.circle.fill",
-                                         text: "تطبيقنا يعتمد على الصوت لمساعدتك في كل خطوة. إذا كنت بحاجة إلى مساعدة صوتية، فقط قل “ساعدني”.")
-                    OnboardingFeatureRow(icon: "hand.thumbsup.circle.fill",
-                                         text: "لضمان أفضل تجربة، يرجى تفعيل بعض الأذونات مثل الكاميرا والصوت. هذا سيمكنك من استخدام تطبيقنا بشكل كامل.")
+                    OnboardingFeatureRow(
+                        icon: "checkmark.circle.fill",
+                        text: "نحن هنا لمساعدتك في التعرف على أدويتك بسهولة وأمان."
+                    )
+                    OnboardingFeatureRow(
+                        icon: "pill.circle.fill",
+                        text: "كل دواء له اسم، تركيبة، وفائدة مختلفة. دعنا نساعدك في التعرف على أدويتك من خلال تقنية مسح سريعة وسهلة."
+                    )
+                    OnboardingFeatureRow(
+                        icon: "mic.circle.fill",
+                        text: "تطبيقنا يعتمد على الصوت لمساعدتك في كل خطوة. إذا كنت بحاجة إلى مساعدة صوتية، فقط استدعي سيري \"Siri\"."
+                    )
+                    OnboardingFeatureRow(
+                        icon: "hand.thumbsup.circle.fill",
+                        text: "لضمان أفضل تجربة، يرجى تفعيل بعض الأذونات مثل الكاميرا والصوت. هذا سيمكنك من استخدام تطبيقنا بشكل كامل."
+                    )
                 }
                 .padding(.top, 20)
                 .padding(.horizontal, 20)
 
                 Spacer()
 
-                // Next Button
+                // MARK: - Next Button
                 Button(action: {
                     // Save to UserDefaults before navigating
                     UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
@@ -54,27 +64,33 @@ struct OnboardingView: View {
                 }
                 .padding(.bottom, 30)
 
+                // Hidden Navigation Link
                 NavigationLink(destination: StartPageView(), isActive: $isNextPageActive) {
                     EmptyView()
                 }
             }
 
-            NavigationLink(destination: ScanView()) {
-                Text("تخطي")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(Color(hex: "#2CA9BC"))
-                    .padding()
-            }
-            .position(x: 70, y: 25)
-        }
+//            // MARK: - Skip Button
+//            NavigationLink(destination: ScanView()) {
+//                Text("تخطي")
+//                    .font(.system(size: 20, weight: .bold))
+//                    .foregroundColor(Color(hex: "#2CA9BC"))
+//                    .padding()
+//            }
+//            .position(x: 70, y: 25)
+//            .onTapGesture {
+//                UserDefaults.standard.set(true, forKey: "hasSeenOnboarding") // Save onboarding status
+//            }
+ }
         .padding()
         .background(Color.white)
         .cornerRadius(10)
         .frame(maxHeight: .infinity)
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden(true) // Hide back button
     }
 }
 
+// MARK: - Feature Row
 struct OnboardingFeatureRow: View {
     let icon: String
     let text: String
@@ -92,6 +108,7 @@ struct OnboardingFeatureRow: View {
     }
 }
 
+// MARK: - Preview
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingView()

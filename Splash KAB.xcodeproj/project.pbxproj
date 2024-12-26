@@ -29,7 +29,7 @@
 
 /* Begin PBXFileReference section */
 		1812540D2D11611300E19AAE /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
-		182314852D082600001997CC /* Splash KAB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Splash KAB.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		182314852D082600001997CC /* Kabsoula.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kabsoula.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		182314952D082601001997CC /* Splash KABTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Splash KABTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1823149F2D082601001997CC /* Splash KABUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Splash KABUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -91,7 +91,7 @@
 		182314862D082600001997CC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				182314852D082600001997CC /* Splash KAB.app */,
+				182314852D082600001997CC /* Kabsoula.app */,
 				182314952D082601001997CC /* Splash KABTests.xctest */,
 				1823149F2D082601001997CC /* Splash KABUITests.xctest */,
 			);
@@ -120,7 +120,7 @@
 			packageProductDependencies = (
 			);
 			productName = "Splash KAB";
-			productReference = 182314852D082600001997CC /* Splash KAB.app */;
+			productReference = 182314852D082600001997CC /* Kabsoula.app */;
 			productType = "com.apple.product-type.application";
 		};
 		182314942D082601001997CC /* Splash KABTests */ = {
@@ -409,11 +409,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Splash KAB/Preview Content\"";
-				DEVELOPMENT_TEAM = 2SU9V4922C;
+				DEVELOPMENT_TEAM = N2F7K9UJ7X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Splash-KAB-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_CFBundleDisplayName = Kabsoula;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "لاستخدام الكاميرا يجب عليك السماح للتطبيق بتفعيل الوصول إلى الكاميرا ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -426,8 +426,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = SplashApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = Heba.com.SplashApp;
+				PRODUCT_NAME = Kabsoula;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -443,11 +443,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Splash KAB/Preview Content\"";
-				DEVELOPMENT_TEAM = 2SU9V4922C;
+				DEVELOPMENT_TEAM = N2F7K9UJ7X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Splash-KAB-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "";
+				INFOPLIST_KEY_CFBundleDisplayName = Kabsoula;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "لاستخدام الكاميرا يجب عليك السماح للتطبيق بتفعيل الوصول إلى الكاميرا ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -460,8 +460,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = SplashApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = Heba.com.SplashApp;
+				PRODUCT_NAME = Kabsoula;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
