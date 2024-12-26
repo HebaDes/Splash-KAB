@@ -1,0 +1,24 @@
+{
+    "fileFormatVersion": "1.0.0",
+    "itemInfoEntries": {
+        "1E0EDCF2-B745-4BAC-B202-8B49E9667B9D": {
+            "author": "com.apple.CoreML",
+            "description": "External Metadata Overlay",
+            "name": "Metadata.json",
+            "path": "com.apple.CoreML/Metadata.json"
+        },
+        "A37F5FA2-AC44-4301-A417-4B2A8A01E85D": {
+            "author": "com.apple.CoreML",
+            "description": "External FeatureDescription Overlay",
+            "name": "FeatureDescriptions.json",
+            "path": "com.apple.CoreML/FeatureDescriptions.json"
+        },
+        "F9B66764-2416-4F11-A94D-CEE0786FAC80": {
+            "author": "com.apple.CoreML",
+            "description": "CoreML Model Specification",
+            "name": "KabsolaApp.mlmodel",
+            "path": "com.apple.CoreML/KabsolaApp.mlmodel"
+        }
+    },
+    "rootModelIdentifier": "F9B66764-2416-4F11-A94D-CEE0786FAC80"
+}

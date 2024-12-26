@@ -1,0 +1,12 @@
+{
+  "MLModelVersionStringKey" : "--",
+  "MLModelDescriptionKey" : "--",
+  "MLModelCreatorDefinedKey" : {
+    "com.apple.createml.version" : "15.1.1",
+    "com.apple.createml.app.tag" : "150.3",
+    "com.apple.coreml.model.preview.type" : "imageClassifier",
+    "com.apple.createml.app.version" : "6.1"
+  },
+  "MLModelAuthorKey" : "Saffanah Aljawi",
+  "MLModelLicenseKey" : "--"
+}
