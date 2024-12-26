@@ -66,14 +66,14 @@ struct ScanView: View {
             DetectedObjectSheet(objectName: detectedObject, pillDetails: pillDetails) {
                 restartDetection()
             }
-            .presentationDetents([.fraction(0.7)]) // Occupy half the screen
+            .presentationDetents([.fraction(0.9)]) // Occupy half the screen
             .presentationDragIndicator(.visible)  // Optional: Show a drag indicator
         }
         .sheet(isPresented: $newShowSheet) {
             DetectedObjectSheet(objectName: newDetectedObject, pillDetails: pillDetails) {
                 restartDetection()
             }
-            .presentationDetents([.fraction(0.7)]) // Occupy half the screen
+            .presentationDetents([.fraction(0.9)]) // Occupy half the screen
             .presentationDragIndicator(.visible)  // Optional: Show a drag indicator
         }
     }
@@ -95,7 +95,7 @@ struct ScanView: View {
                             detectedObject = topResult.identifier
                             prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
                             //هنا يتعامل بالثواني ف  لو حطيتي ٦٠ يعني دقيقه و هكذا
-                            stopDetection(for: 120) // Stop for 2 minutes
+                            stopDetection(for: 60) // Stop for 2 minutes
                             showSheet = true
                         } else if confidence >= 70 {
                             prediction = "جارٍ المسح... الرجاء الانتظار (\(Int(confidence))%)"
