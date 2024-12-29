@@ -11,13 +11,13 @@ struct OnboardingView: View {
                 // MARK: - Header
                 VStack(spacing: -5) {
                     Text("مرحباً بك في")
-                        .font(.system(size: 48))
+                        .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(Color.black)
                         .multilineTextAlignment(.center)
 
                     Text("كبسولة")
-                        .font(.system(size: 48))
+                        .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(Color(hex: "#00BCD4"))
                         .multilineTextAlignment(.center)
@@ -54,7 +54,7 @@ struct OnboardingView: View {
                     isNextPageActive = true
                 }) {
                     Text("التالي")
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.body)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -73,7 +73,7 @@ struct OnboardingView: View {
 //            // MARK: - Skip Button
 //            NavigationLink(destination: ScanView()) {
 //                Text("تخطي")
-//                    .font(.system(size: 20, weight: .bold))
+//                    .font(.body)
 //                    .foregroundColor(Color(hex: "#2CA9BC"))
 //                    .padding()
 //            }
@@ -99,9 +99,9 @@ struct OnboardingFeatureRow: View {
         HStack {
             Image(systemName: icon)
                 .foregroundColor(Color(hex: "#2CA9BC"))
-                .font(.system(size: 40))
+                .font(.largeTitle)
             Text(text)
-                .font(.system(size: 18, weight: .bold))
+                .font(.body)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.leading)
         }

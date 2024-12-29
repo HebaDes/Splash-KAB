@@ -17,14 +17,14 @@ struct StartPageView: View {
 
                 // Title Text
                 Text("يمكنك الآن البدء بمسح الأدوية!")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.title)
                     .foregroundColor(.black)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 30)
 
                 // Subtitle Text
                 Text("ابدأ الآن واستمتع بتجربة سهلة للتعرف على أدويتك بدقة وراحة")
-                    .font(.system(size: 20, weight: .regular))
+                    .font(.body)
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 30)
@@ -34,7 +34,7 @@ struct StartPageView: View {
                 // Start Button
                 NavigationLink(destination: ScanView()) {
                     Text("ابدأ")
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.body)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()

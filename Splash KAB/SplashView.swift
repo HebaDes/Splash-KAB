@@ -48,7 +48,7 @@ struct splashView: View {
                     
                     // Arabic Text "كبسولة"
                     Text("كبسولة")
-                        .font(.system(size: 48)) // Custom font "SF Pro"
+                        .font(.title) // Custom font "SF Pro"
                         .fontWeight(.bold)
                         .foregroundColor(.white) // White text color
                         .multilineTextAlignment(.center) // Center-align the text
