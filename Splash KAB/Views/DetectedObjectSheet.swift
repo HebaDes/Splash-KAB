@@ -16,7 +16,8 @@ struct DetectedObjectSheet: View {
         VStack {
             Text("تم الكشف عن الكائن")
                 .font(.largeTitle)
-                .padding()
+                .padding(20)
+            
             Text("تم الكشف عن: \(objectName)")
                 .font(.title)
                 .padding()

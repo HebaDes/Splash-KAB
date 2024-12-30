@@ -17,15 +17,17 @@ struct ScanView: View {
     @State private var showSheet: Bool = false
     @State private var isDetectionPaused: Bool = false
 
-    @State private var newPrediction: String = "جارٍ المسح باستخدام النموذج الجديد..."
-    @State private var newDetectedObject: String = ""
-    @State private var newShowSheet: Bool = false
-
     let pillDetails: [String: String] = [
         "Panadol": NSLocalizedString("Panadol", comment: "Panadol description"),
         "Ibuprofen": NSLocalizedString("Ibuprofen", comment: "Ibuprofen description"),
         "Megamox": NSLocalizedString("Megamox", comment: "Megamox description"),
         "Unknown": NSLocalizedString("Unknown", comment: "Unknown pill description")
+    ]
+
+    let bucketDetails: [String: String] = [
+        "Bucket1": NSLocalizedString("Bucket 1", comment: "Bucket 1 description"),
+        "Bucket2": NSLocalizedString("Bucket 2", comment: "Bucket 2 description"),
+        "Unknown": NSLocalizedString("Unknown Bucket", comment: "Unknown bucket description")
     ]
 
     // MARK: - Camera view for live detection
@@ -45,12 +47,6 @@ struct ScanView: View {
                         .cornerRadius(10)
                         .padding(.bottom, 10)
 
-                    Text(newPrediction)
-                        .padding()
-                        .background(Color.gray.opacity(0.7))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .padding(.bottom, 20)
                 } else {
                     Text("الكاميرا متوقفة مؤقتًا")
                         .padding()
@@ -68,8 +64,7 @@ struct ScanView: View {
             
             cameraModel.startSession { image in
                 guard !isDetectionPaused else { return } // Skip detection if paused
-                classifyImageUsingOldModel(image: image)
-                classifyImageUsingNewModel(image: image)
+                classifyImageUsingBucketModel(image: image)
             }
         }
         .onDisappear {
@@ -79,19 +74,8 @@ struct ScanView: View {
         .sheet(isPresented: $showSheet) {
             // Show detailed information for the detected object
             DetectedObjectSheet(
-                objectName: pillDetails[detectedObject] ?? NSLocalizedString("Unknown", comment: "Unknown pill description"),
-                pillDetails: pillDetails
-            ) {
-                restartDetection()
-            }
-            .presentationDetents([.fraction(0.6)])
-            .presentationDragIndicator(.visible)
-        }
-        .sheet(isPresented: $newShowSheet) {
-            // Show information for new model detections
-            DetectedObjectSheet(
-                objectName: pillDetails[newDetectedObject] ?? NSLocalizedString("Unknown", comment: "Unknown pill description"),
-                pillDetails: pillDetails
+                objectName: detectedObject,
+                pillDetails: pillDetails.merging(bucketDetails) { (_, new) in new }
             ) {
                 restartDetection()
             }
@@ -100,11 +84,11 @@ struct ScanView: View {
         }
     }
 
-    // MARK: - Classify an image using the old model
-    private func classifyImageUsingOldModel(image: CGImage) {
+    // MARK: - Classify image using the bucket model
+    private func classifyImageUsingBucketModel(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let model = try? VNCoreMLModel(for: KabsolaApp().model) else {
-                print("Failed to load the old model.")
+                print("Failed to load the bucket detection model.")
                 return
             }
 
@@ -113,15 +97,16 @@ struct ScanView: View {
                    let topResult = results.first {
                     DispatchQueue.main.async {
                         let confidence = topResult.confidence * 100
-                        if confidence >= 88 {
-                            detectedObject = topResult.identifier
-                            prediction = "تم الكشف عن: \(pillDetails[detectedObject] ?? NSLocalizedString("Unknown", comment: "Unknown pill description")) (\(Int(confidence))%)"
-                            stopDetection(for: 30) // Stop detection for 1 minute
+                        if confidence >= 85 {
+                            detectedObject = bucketDetails[topResult.identifier] ?? NSLocalizedString("Unknown", comment: "Unknown bucket description")
+                            prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
                             showSheet = true
-                        } else if confidence >= 70 {
-                            prediction = "جارٍ المسح... الرجاء الانتظار (\(Int(confidence))%)"
+                            stopDetection(for: 30)
                         } else {
-                            prediction = "الكائن بعيد جدًا (\(Int(confidence))%)"
+                            prediction = "جارٍ المسح عن الدلو... (\(Int(confidence))%)"
+                            if topResult.identifier == "Unknown" || confidence < 85 {
+                                classifyImageUsingPillModel(image: image)
+                            }
                         }
                     }
                 }
@@ -132,11 +117,11 @@ struct ScanView: View {
         }
     }
 
-    // MARK: - Classify an image using the new model
-    private func classifyImageUsingNewModel(image: CGImage) {
+    // MARK: - Classify image using the pill model
+    private func classifyImageUsingPillModel(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
-            guard let model = try? VNCoreMLModel(for: pillDetect(configuration: MLModelConfiguration()).model) else {
-                print("Failed to load the new model.")
+            guard let model = try? VNCoreMLModel(for: pillDetect().model) else {
+                print("Failed to load the pill detection model.")
                 return
             }
 
@@ -145,15 +130,16 @@ struct ScanView: View {
                    let topResult = results.first {
                     DispatchQueue.main.async {
                         let confidence = topResult.confidence * 100
-                        if confidence >= 88 {
-                            newDetectedObject = topResult.identifier
-                            newPrediction = "تم الكشف عن: \(pillDetails[newDetectedObject] ?? NSLocalizedString("Unknown", comment: "Unknown pill description")) (\(Int(confidence))%)"
-                            stopDetection(for: 30) // Stop detection for 1 minute
-                            newShowSheet = true
-                        } else if confidence >= 70 {
-                            newPrediction = "جارٍ المسح باستخدام النموذج... الرجاء الانتظار (\(Int(confidence))%)"
+                        if confidence >= 85 {
+                            detectedObject = pillDetails[topResult.identifier] ?? NSLocalizedString("Unknown", comment: "Unknown pill description")
+                            prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
+                            showSheet = true
+                            stopDetection(for: 30)
                         } else {
-                            newPrediction = "الكائن بعيد جدًا بالنسبة للنموذج الجديد (\(Int(confidence))%)"
+                            detectedObject = NSLocalizedString("Unknown", comment: "Unknown object description")
+                            prediction = "لم يتم التعرف على الكائن (\(Int(confidence))%)"
+                            showSheet = true
+                            stopDetection(for: 30)
                         }
                     }
                 }
@@ -162,9 +148,7 @@ struct ScanView: View {
             let handler = VNImageRequestHandler(cgImage: image, options: [:])
             try? handler.perform([request])
         }
-    }
-
-    // MARK: - Pause detection for a specified duration
+    }    // MARK: - Pause detection for a specified duration
     private func stopDetection(for seconds: Int) {
         isDetectionPaused = true
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(seconds)) {
