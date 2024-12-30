@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct StartPageView: View {
+    @State private var isCameraPageActive = false
+
     var body: some View {
         ZStack {
             Color.white
                 .edgesIgnoringSafeArea(.all)
 
             VStack(spacing: 20) {
+                // Phone Image
                 Image("Phone")
                     .resizable()
                     .scaledToFit()
@@ -21,12 +24,14 @@ struct StartPageView: View {
                     .padding(.top, 60)
                     .offset(x: 20)
 
+                // Main Title
                 Text("يمكنك الآن البدء بمسح الأدوية!")
                     .font(.title)
                     .foregroundColor(.black)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 30)
 
+                // Subtitle
                 Text("ابدأ الآن واستمتع بتجربة سهلة للتعرف على أدويتك بدقة وراحة")
                     .font(.body)
                     .foregroundColor(.gray)
@@ -35,7 +40,11 @@ struct StartPageView: View {
 
                 Spacer()
 
-                NavigationLink(destination: ScanView()) {
+                // Start Button
+                Button(action: {
+                    UserDefaults.standard.set(true, forKey: "hasSeenStartPage")
+                    isCameraPageActive = true
+                }) {
                     Text("ابدأ")
                         .font(.body)
                         .foregroundColor(.white)
@@ -46,9 +55,15 @@ struct StartPageView: View {
                         .padding(.horizontal, 30)
                 }
                 .padding(.bottom, 77)
+
+                // Navigation Link to the Camera Page
+                NavigationLink(destination: ScanView().navigationBarBackButtonHidden(true), isActive: $isCameraPageActive) {
+                    EmptyView()
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
+        
     }
 }
 

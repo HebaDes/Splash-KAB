@@ -83,13 +83,8 @@ struct OnboardingView: View {
             .padding(.top, 45)
         }
         .background(Color.white)
-        .navigationBarBackButtonHidden(true) // Hide back button
-        .onAppear {
-            // Check if the onboarding was already completed
-            if UserDefaults.standard.bool(forKey: "hasSeenOnboarding") {
-                isNextPageActive = true
-            }
-        }
+        .navigationBarBackButtonHidden(true)
+
     }
 }
 
@@ -118,4 +113,3 @@ struct OnboardingView_Previews: PreviewProvider {
         OnboardingView()
     }
 }
-
