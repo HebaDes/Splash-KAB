@@ -1,3 +1,10 @@
+//
+//  StartPageView.swift
+//  Splash KAB
+//
+//  Created by Shamam Alkafri on 30/12/2024.
+//
+
 import SwiftUI
 
 struct StartPageView: View {
@@ -7,22 +14,19 @@ struct StartPageView: View {
                 .edgesIgnoringSafeArea(.all)
 
             VStack(spacing: 20) {
-                // Main Image
                 Image("Phone")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 350, height: 400)
                     .padding(.top, 60)
-                    .offset(x: 20) // Move image slightly to the left
+                    .offset(x: 20)
 
-                // Title Text
                 Text("يمكنك الآن البدء بمسح الأدوية!")
                     .font(.title)
                     .foregroundColor(.black)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 30)
 
-                // Subtitle Text
                 Text("ابدأ الآن واستمتع بتجربة سهلة للتعرف على أدويتك بدقة وراحة")
                     .font(.body)
                     .foregroundColor(.gray)
@@ -31,7 +35,6 @@ struct StartPageView: View {
 
                 Spacer()
 
-                // Start Button
                 NavigationLink(destination: ScanView()) {
                     Text("ابدأ")
                         .font(.body)

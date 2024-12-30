@@ -1,3 +1,10 @@
+//
+//  SplashView.swift
+//  Splash KAB
+//
+//  Created by Shamam Alkafri on 30/12/2024.
+//
+
 import SwiftUI
 
 struct SplashView: View {
@@ -60,7 +67,6 @@ struct SplashView: View {
                     }
                 }
 
-                // Separate the navigation destination based on the condition
                 NavigationLink(
                     destination: destinationView(),
                     isActive: $isNavigationActive
@@ -71,7 +77,6 @@ struct SplashView: View {
         }
     }
 
-    /// Helper function to resolve type mismatch issue by returning the appropriate view
     @ViewBuilder
     private func destinationView() -> some View {
         if hasSeenOnboarding {
