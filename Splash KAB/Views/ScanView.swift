@@ -1,3 +1,10 @@
+//
+//  ScanView.swift
+//  Splash KAB
+//
+//  Created by Shamam Alkafri on 30/12/2024.
+//
+
 import SwiftUI
 import AVFoundation
 import CoreML
@@ -21,12 +28,15 @@ struct ScanView: View {
         "Unknown": NSLocalizedString("Unknown", comment: "Unknown pill description")
     ]
 
+    // MARK: - Camera view for live detection
     var body: some View {
         ZStack {
+            
             Camera1View(cameraModel: cameraModel)
             VStack {
                 Spacer()
 
+                // Predictions and detection results
                 if !isDetectionPaused {
                     Text(prediction)
                         .padding()
@@ -50,35 +60,47 @@ struct ScanView: View {
                         .padding(.bottom, 20)
                 }
             }
+            .navigationBarBackButtonHidden(true) 
         }
-        .onAppear { // When the view appears, start the camera session
+        
+        // MARK: - Start the camera , stop and other processes
+        .onAppear {
+            
             cameraModel.startSession { image in
-                guard !isDetectionPaused else { return }// Skip detection if paused
+                guard !isDetectionPaused else { return } // Skip detection if paused
                 classifyImageUsingOldModel(image: image)
                 classifyImageUsingNewModel(image: image)
             }
         }
-        .onDisappear {// When the view disappears, stop the camera session
+        .onDisappear {
+            // Stop the camera session when view disappears
             cameraModel.stopSession()
         }
-        //خليت الشيت هنا تكون (٠.٧) عشان يبان انو شيت و ما يكون علئ كامل الصفحة
         .sheet(isPresented: $showSheet) {
-            DetectedObjectSheet(objectName: detectedObject, pillDetails: pillDetails) {
+            // Show detailed information for the detected object
+            DetectedObjectSheet(
+                objectName: pillDetails[detectedObject] ?? NSLocalizedString("Unknown", comment: "Unknown pill description"),
+                pillDetails: pillDetails
+            ) {
                 restartDetection()
             }
-            .presentationDetents([.fraction(0.9)]) // Occupy half the screen
-            .presentationDragIndicator(.visible)  // Optional: Show a drag indicator
+            .presentationDetents([.fraction(0.6)])
+            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $newShowSheet) {
-            DetectedObjectSheet(objectName: newDetectedObject, pillDetails: pillDetails) {
+            // Show information for new model detections
+            DetectedObjectSheet(
+                objectName: pillDetails[newDetectedObject] ?? NSLocalizedString("Unknown", comment: "Unknown pill description"),
+                pillDetails: pillDetails
+            ) {
                 restartDetection()
             }
-            .presentationDetents([.fraction(0.9)]) // Occupy half the screen
-            .presentationDragIndicator(.visible)  // Optional: Show a drag indicator
+            .presentationDetents([.fraction(0.6)])
+            .presentationDragIndicator(.visible)
         }
     }
-    // Classify an image using the old model
 
+    // MARK: - Classify an image using the old model
     private func classifyImageUsingOldModel(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let model = try? VNCoreMLModel(for: KabsolaApp().model) else {
@@ -91,11 +113,10 @@ struct ScanView: View {
                    let topResult = results.first {
                     DispatchQueue.main.async {
                         let confidence = topResult.confidence * 100
-                        if confidence >= 99 {
+                        if confidence >= 88 {
                             detectedObject = topResult.identifier
-                            prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
-                            //هنا يتعامل بالثواني ف  لو حطيتي ٦٠ يعني دقيقه و هكذا
-                            stopDetection(for: 60) // Stop for 2 minutes
+                            prediction = "تم الكشف عن: \(pillDetails[detectedObject] ?? NSLocalizedString("Unknown", comment: "Unknown pill description")) (\(Int(confidence))%)"
+                            stopDetection(for: 30) // Stop detection for 1 minute
                             showSheet = true
                         } else if confidence >= 70 {
                             prediction = "جارٍ المسح... الرجاء الانتظار (\(Int(confidence))%)"
@@ -110,8 +131,8 @@ struct ScanView: View {
             try? handler.perform([request])
         }
     }
-    // Classify an image using the new model
 
+    // MARK: - Classify an image using the new model
     private func classifyImageUsingNewModel(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let model = try? VNCoreMLModel(for: pillDetect(configuration: MLModelConfiguration()).model) else {
@@ -124,10 +145,10 @@ struct ScanView: View {
                    let topResult = results.first {
                     DispatchQueue.main.async {
                         let confidence = topResult.confidence * 100
-                        if confidence >= 99 {
+                        if confidence >= 88 {
                             newDetectedObject = topResult.identifier
-                            newPrediction = "تم الكشف عن: \(newDetectedObject) (\(Int(confidence))%)"
-                            stopDetection(for: 60) // Stop for 30 seconds
+                            newPrediction = "تم الكشف عن: \(pillDetails[newDetectedObject] ?? NSLocalizedString("Unknown", comment: "Unknown pill description")) (\(Int(confidence))%)"
+                            stopDetection(for: 30) // Stop detection for 1 minute
                             newShowSheet = true
                         } else if confidence >= 70 {
                             newPrediction = "جارٍ المسح باستخدام النموذج... الرجاء الانتظار (\(Int(confidence))%)"
@@ -142,120 +163,17 @@ struct ScanView: View {
             try? handler.perform([request])
         }
     }
-// فنكشن توقف ديتيكشن
+
+    // MARK: - Pause detection for a specified duration
     private func stopDetection(for seconds: Int) {
         isDetectionPaused = true
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(seconds)) {
             isDetectionPaused = false
         }
     }
-// يسوي ريستارت للديتيكشن
+
+    // MARK: - Restart detection after pausing
     private func restartDetection() {
         isDetectionPaused = false
     }
-}
-
-struct DetectedObjectSheet: View {
-    let objectName: String
-    let pillDetails: [String: String]
-    let onClose: () -> Void
-
-    var body: some View {
-        VStack {
-            Text("تم الكشف عن الكائن")
-                .font(.largeTitle)
-                .padding()
-            Text("تم الكشف عن: \(objectName)")
-                .font(.title)
-                .padding()
-            Text(pillDetails[objectName] ?? "No details available.")
-                .font(.title)
-                .padding()
-            // في كل مره يضغط علئ الزر يشتغل الديتكشن و يطلع الشيت
-            Button("حاول مرة أخرى") {
-                onClose()
-            }
-            .padding(30)
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-        }
-        .padding()
-    }
-}
-
-struct Camera1View: UIViewControllerRepresentable {
-    @ObservedObject var cameraModel: Camera1ViewModel
-    
-    func makeUIViewController(context: Context) -> Camera1ViewController {
-        let controller = Camera1ViewController()
-        controller.cameraModel = cameraModel
-        return controller
-    }
-    
-    func updateUIViewController(_ uiViewController: Camera1ViewController, context: Context) {}
-}
-
-class Camera1ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
-    var cameraModel: Camera1ViewModel?
-    private var captureSession: AVCaptureSession!
-    private var previewLayer: AVCaptureVideoPreviewLayer!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupCamera()
-    }
-    
-    private func setupCamera() {
-        captureSession = AVCaptureSession()
-        captureSession.sessionPreset = .photo
-        
-        guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
-              let videoInput = try? AVCaptureDeviceInput(device: videoDevice),
-              captureSession.canAddInput(videoInput) else {
-            print("Failed to access the camera.")
-            return
-        }
-        captureSession.addInput(videoInput)
-        
-        let videoOutput = AVCaptureVideoDataOutput()
-        videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
-        guard captureSession.canAddOutput(videoOutput) else { return }
-        captureSession.addOutput(videoOutput)
-        
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.videoGravity = .resizeAspectFill
-        previewLayer.frame = view.layer.bounds
-        view.layer.addSublayer(previewLayer)
-        
-        captureSession.startRunning()
-    }
-    
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let context = CIContext()
-        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
-            DispatchQueue.main.async {
-                self.cameraModel?.onFrameCaptured?(cgImage)
-            }
-        }
-    }
-}
-
-class Camera1ViewModel: ObservableObject {
-    var onFrameCaptured: ((CGImage) -> Void)?
-    private var session: AVCaptureSession?
-    
-    func startSession(onFrame: @escaping (CGImage) -> Void) {
-        onFrameCaptured = onFrame
-    }
-    
-    func stopSession() {
-        session?.stopRunning()
-    }
-}
-
-#Preview {
-    ScanView()
 }
