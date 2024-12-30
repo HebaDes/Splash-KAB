@@ -15,3 +15,4 @@ struct Splash_KABApp: App {
         }
     }
 }
+

@@ -11,6 +11,7 @@ struct SplashView: View {
     @State private var animateScale: CGFloat = 1.0
     @State private var isNavigationActive = false
     @State private var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
+    @State private var hasSeenStartPage: Bool = UserDefaults.standard.bool(forKey: "hasSeenStartPage")
 
     var body: some View {
         NavigationView {
@@ -61,7 +62,7 @@ struct SplashView: View {
                             animateScale = 1.5
                         }
 
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             isNavigationActive = true
                         }
                     }
@@ -79,10 +80,12 @@ struct SplashView: View {
 
     @ViewBuilder
     private func destinationView() -> some View {
-        if hasSeenOnboarding {
+        if !hasSeenOnboarding {
+            OnboardingView()
+        } else if !hasSeenStartPage {
             StartPageView()
         } else {
-            OnboardingView()
+            ScanView()
         }
     }
 }
