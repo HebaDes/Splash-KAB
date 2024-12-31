@@ -21,4 +21,16 @@ class Camera1ViewModel: ObservableObject {
     func stopSession() {
         session?.stopRunning()
     }
+
+    func processFrame(pixelBuffer: CVPixelBuffer) {
+        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+        let context = CIContext()
+
+        if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+            DispatchQueue.main.async {
+                print("Captured Image: \(cgImage)") 
+                self.onFrameCaptured?(cgImage)
+            }
+        }
+    }
 }
