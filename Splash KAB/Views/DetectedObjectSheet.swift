@@ -31,10 +31,11 @@ struct DetectedObjectSheet: View {
                     .font(.title2)
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.red)
+                    .background(Color(red: 0.83, green: 0.18, blue: 0.18)) // Custom HEX Color (#D32F2F)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
+
             .padding(.horizontal, 20)
             .padding(.bottom, 20)
         }

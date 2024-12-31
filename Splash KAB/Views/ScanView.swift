@@ -37,12 +37,15 @@ struct ScanView: View {
 
                 Button(action: captureImage) {
                     Text("التقاط صورة")
-                        .font(.title2)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .font(.title2) // Font size
+                        .fontWeight(.bold) // Bold for consistency
+                        .padding() // Padding
+                        .frame(maxWidth: .infinity, minHeight: 50) // Same height as the close button
+                        .background(Color(red: 0.17, green: 0.66, blue: 0.74)) // #2CA9BC
+                        .foregroundColor(.white) // Text color
+                        .cornerRadius(10) // Rounded corners
                 }
+
                 .padding(.bottom, 50)
             }
         }
