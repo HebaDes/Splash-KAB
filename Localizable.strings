@@ -1,5 +1,5 @@
 /* Onboarding Screen */
-"Welcome to Capsule" = "Welcome to Capsule";
+"Welcome to " = "Welcome to ";
 "Capsule App Name" = "Capsule";
 "We are here to help you identify your medicine easily and safely" = "We are here to help you identify your medicine easily and safely";
 "Checkmark Icon" = "Checkmark Icon";
@@ -21,7 +21,7 @@
 "Skips the onboarding process." = "Skips the onboarding process.";
 
 /* Onboarding Screen */
-"Welcome to Capsule" = "مرحباً بك في كبسولة";
+"Welcome to " = "مرحباً بك في";
 "Capsule App Name" = "كبسولة";
 "We are here to help you identify your medicine easily and safely" = "نحن هنا لمساعدتك في التعرف على أدويتك بسهولة وأمان";
 "Checkmark Icon" = "رمز العلامة الصح";

@@ -1,11 +1,3 @@
-//
-//  OnboardingView.swift
-//  Splash KAB
-//
-//  Created by Shamam Alkafri on 30/12/2024.
-//
-
-
 import SwiftUI
 
 struct OnboardingView: View {
@@ -15,25 +7,25 @@ struct OnboardingView: View {
         ScrollView {
             VStack(spacing: 20) {
                 // MARK: - Header
-                VStack(spacing: -5) {
-                    Text(NSLocalizedString("Welcome to Capsule", comment: "Welcome message for Capsule"))
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+                VStack(spacing: 10) {
+                    // Welcome Text
+                    Text(NSLocalizedString("Welcome to ", comment: "Welcome message for Capsule"))
+                        .font(.system(size: 40)) // Larger Font Size
+                        .fontWeight(.bold) // Bold
                         .foregroundColor(Color.black)
                         .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .accessibilityLabel(NSLocalizedString("Welcome to Capsule", comment: "Accessibility label for welcome message"))
-                        .accessibilityHint(NSLocalizedString("Describes the purpose of the Capsule app.", comment: "Accessibility hint for welcome message"))
-                        .padding(.top, 40) // Fixed space at the top
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 40)
+                        .accessibilityAddTraits(.isHeader)
 
+                    // App Name
                     Text(NSLocalizedString("Capsule App Name", comment: "Capsule App Name"))
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+                        .font(.system(size: 40)) // Larger Font Size
+                        .fontWeight(.bold) // Bold
                         .foregroundColor(Color(hex: "#00BCD4"))
                         .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .accessibilityLabel(NSLocalizedString("Capsule App Name", comment: "Accessibility label for app name"))
-                        .accessibilityHint(NSLocalizedString("Describes how the app helps identify medicines.", comment: "Accessibility hint for app name"))
+                        .frame(maxWidth: .infinity)
+                        .accessibilityAddTraits(.isHeader)
                 }
 
                 // MARK: - Features List
@@ -55,9 +47,10 @@ struct OnboardingView: View {
                         text: NSLocalizedString("For the best experience, please enable some permissions like camera and sound. This will enable you to use the full features of our app.", comment: "Feature text 4")
                     )
                 }
-                .padding(.horizontal, 25)
+                .padding(.horizontal, 15) // Reduced padding for margins
+                .accessibilityHint("Swipe down with three fingers to hear more instructions.")
 
-                Spacer(minLength: 90)
+                Spacer(minLength: 20)
 
                 // MARK: - Next Button
                 Button(action: {
@@ -65,26 +58,31 @@ struct OnboardingView: View {
                     isNextPageActive = true
                 }) {
                     Text(NSLocalizedString("Next Button", comment: "Next Button Text"))
-                        .font(.body)
+                        .font(.body) // Dynamic Type
+                        .fontWeight(.bold) // Bold
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color(hex: "#2CA9BC"))
                         .cornerRadius(10)
-                        .padding(.horizontal, 25)
+                        .padding(.horizontal, 15) // Reduced padding
                 }
-                .padding(.bottom, 10)
+                .padding(.bottom, 20) // Moved button slightly up
+                .accessibilityLabel("Next Button")
+                .accessibilityHint("Navigates to the next page.")
 
                 // MARK: - Navigation Link
                 NavigationLink(destination: StartPageView().navigationBarBackButtonHidden(true), isActive: $isNextPageActive) {
                     EmptyView()
                 }
             }
-            .padding(.top, 45)
+            .padding(.horizontal, 15) // Reduced padding for margins
+            .padding(.top, 40)
+            .padding(.bottom, 20) // Reduced bottom padding
         }
         .background(Color.white)
         .navigationBarBackButtonHidden(true)
-
+        .accessibilityHint("This page contains multiple instructions. Swipe down with three fingers to scroll through the instructions.")
     }
 }
 
@@ -97,13 +95,18 @@ struct OnboardingFeatureRow: View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: icon)
                 .foregroundColor(Color(hex: "#2CA9BC"))
-                .font(.largeTitle)
+                .font(.system(size: 36)) // Enlarged icon size
+                .accessibilityLabel("Icon") // VoiceOver announces this as an icon
+
             Text(text)
-                .font(.body)
+                .font(.body) // Dynamic Type
+                .fontWeight(.bold) // Bold
                 .foregroundColor(.black)
                 .multilineTextAlignment(.leading)
                 .lineSpacing(5)
+                .accessibilityLabel(text)
         }
+        .padding(.horizontal, 10) // Added horizontal padding for alignment
     }
 }
 
@@ -111,5 +114,7 @@ struct OnboardingFeatureRow: View {
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingView()
+            .environment(\.dynamicTypeSize, .accessibility3) // Test scaling
+            .previewDevice("iPhone 15 Pro")
     }
 }
