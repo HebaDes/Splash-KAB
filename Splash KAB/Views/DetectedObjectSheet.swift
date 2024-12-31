@@ -13,25 +13,31 @@ struct DetectedObjectSheet: View {
     let onClose: () -> Void
 
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             Text("تم الكشف عن الكائن")
                 .font(.largeTitle)
-                .padding(20)
-            
+                .padding(.top, 20)
+
             Text("تم الكشف عن: \(objectName)")
                 .font(.title)
+                .multilineTextAlignment(.center)
                 .padding()
 
-            // Button to restart detection
-            Button("حاول مرة أخرى") {
-                onClose()
+            Spacer()
+
+            // Close Button
+            Button(action: onClose) {
+                Text("إغلاق")
+                    .font(.title2)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
             }
-            .padding(20)
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
         }
         .padding()
-        .navigationBarBackButtonHidden(true) 
     }
 }
