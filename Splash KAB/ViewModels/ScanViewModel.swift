@@ -31,11 +31,11 @@ class ScanViewModel: ObservableObject {
                    let topResult = results.first {
                     DispatchQueue.main.async {
                         let confidence = topResult.confidence * 100
-                        if confidence >= 99 {
+                        if confidence >= 80 {
                             self.detectedObject = topResult.identifier
                             self.prediction = "تم الكشف عن: \(self.detectedObject) (\(Int(confidence))%)"
                             self.showSheet = true
-                            self.pauseDetection(for: 60) // Stop for 60 seconds
+                            self.pauseDetection(for: 30) // Stop for 60 seconds
                         } else if confidence >= 70 {
                             self.prediction = "جارٍ المسح... الرجاء الانتظار (\(Int(confidence))%)"
                         } else {
