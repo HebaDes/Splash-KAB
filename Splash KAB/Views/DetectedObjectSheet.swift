@@ -14,13 +14,13 @@ struct DetectedObjectSheet: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Text("تم الكشف عن الكائن")
+            Text("النتيجة")
                 .font(.largeTitle)
                 .padding(.top, 20)
 
             Text("تم الكشف عن: \(objectName)")
                 .font(.title)
-                .multilineTextAlignment(.center)
+                .multilineTextAlignment(.leading)
                 .padding()
 
             Spacer()

@@ -15,16 +15,17 @@ struct ScanView: View {
     @State private var capturedImage: CGImage?
     @State private var prediction: String = "لم يتم اكتشاف أي كائن"
     @State private var detectedObject: String = ""
+    @State private var detectedUsage: String = ""
     @State private var showSheet: Bool = false
 
     // Model-specific details
     let bucketDetails: [String: String] = [
-        "Panadol": NSLocalizedString("Panadol", comment: "Panadol description"),
-        "Ibuprofen": NSLocalizedString("Ibuprofen", comment: "Ibuprofen description"),
-        "Megamox": NSLocalizedString("Megamox", comment: "Megamox description"),
-        "Bucket1": NSLocalizedString("Bucket 1", comment: "Bucket 1 description"),
-        "Bucket2": NSLocalizedString("Bucket 2", comment: "Bucket 2 description"),
-        "Unknown": NSLocalizedString("Unknown", comment: "Unknown description")
+        "Panadol": NSLocalizedString("Panadol: يستخدم لتخفيف الألم والحمى", comment: "Panadol description"),
+        "Ibuprofen": NSLocalizedString("Ibuprofen: يستخدم لتقليل الالتهابات والألم", comment: "Ibuprofen description"),
+        "Megamox": NSLocalizedString("Megamox: مضاد حيوي يستخدم لعلاج العدوى", comment: "Megamox description"),
+        "Bucket1": NSLocalizedString("Bucket 1: وصف لدواء دلو 1", comment: "Bucket 1 description"),
+        "Bucket2": NSLocalizedString("Bucket 2: وصف لدواء دلو 2", comment: "Bucket 2 description"),
+        "Unknown": NSLocalizedString("Unknown: لا توجد تفاصيل متوفرة", comment: "Unknown description")
     ]
 
     // MARK: - Main Body
@@ -35,20 +36,34 @@ struct ScanView: View {
             VStack {
                 Spacer()
 
-                Button(action: captureImage) {
-                    Text("التقاط صورة")
-                        .font(.title2) // Font size
-                        .fontWeight(.bold) // Bold for consistency
-                        .padding() // Padding
-                        .frame(maxWidth: .infinity, minHeight: 50) // Same height as the close button
-                        .background(Color(red: 0.17, green: 0.66, blue: 0.74)) // #2CA9BC
-                        .foregroundColor(.white) // Text color
-                        .cornerRadius(10) // Rounded corners
-                }
+                HStack {
+                    // Static Pill Detection Button
+                    Button(action: detectPillStatic) {
+                        Text("كشف الحبة")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
 
+                    // Dynamic Bucket Model Detection Button
+                    Button(action: captureImageUsingBucketModel) {
+                        Text("كشف الدواء")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, minHeight: 50)
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                }
+                .padding(.horizontal)
                 .padding(.bottom, 50)
             }
         }
+        .navigationBarBackButtonHidden(true) // Hide the back button
         .onAppear {
             cameraModel.startSession { image in
                 self.capturedImage = image
@@ -58,30 +73,64 @@ struct ScanView: View {
             cameraModel.stopSession()
         }
         .sheet(isPresented: $showSheet) {
-            DetectedObjectSheet(
-                objectName: detectedObject,
-                pillDetails: bucketDetails,
-                onClose: {
-                    showSheet = false 
+            VStack {
+                Text("اسم الحبة: \(detectedObject)")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding()
+
+                Text("الوصف:")
+                    .font(.headline)
+                    .padding(.top)
+
+                Text(detectedUsage)
+                    .font(.body)
+                    .padding()
+
+                Button(action: {
+                    resetDetection()
+                    showSheet = false
+                }) {
+                    Text("إغلاق")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding()
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                 }
-            )
+                .padding(.top, 20)
+            }
+            .padding()
             .presentationDetents([.fraction(0.5)])
             .presentationDragIndicator(.visible)
         }
     }
 
-    // MARK: - Capture and Classify Image
-    private func captureImage() {
+    // MARK: - Pill Detection
+    private func detectPillStatic() {
+        prediction = "جارٍ المسح..."
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { // Simulate processing time
+            self.detectedObject = "Panadol"
+            self.detectedUsage = bucketDetails[self.detectedObject] ?? "لا توجد تفاصيل متوفرة"
+            self.prediction = "تم الكشف عن: \(self.detectedObject)"
+            self.showSheet = true
+        }
+    }
+
+    // MARK: - Capture and Classify Image Using Bucket Model
+    private func captureImageUsingBucketModel() {
         guard let image = capturedImage else {
             prediction = "لم يتم التقاط صورة"
             print("Error: No image captured")
             return
         }
-        print("Image captured successfully. Passing to model...")
+        print("Image captured successfully. Passing to bucket model...")
         classifyImageUsingBucketModel(image: image)
     }
 
-    // MARK: - Classify Image with First Model (Bucket Model)
+    // MARK: - Classify Image with Bucket Model
     private func classifyImageUsingBucketModel(image: CGImage) {
         DispatchQueue.global(qos: .userInitiated).async {
             guard let model = try? VNCoreMLModel(for: KabsolaApp().model) else {
@@ -97,10 +146,12 @@ struct ScanView: View {
                         print("Bucket Model Result: \(topResult.identifier) (\(confidence)%)")
                         
                         if confidence >= 80 {
-                            detectedObject = bucketDetails[topResult.identifier] ?? "Unknown"
+                            detectedObject = topResult.identifier
+                            detectedUsage = bucketDetails[detectedObject] ?? "لا توجد تفاصيل متوفرة"
                             prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
                         } else {
                             detectedObject = "غير معروف"
+                            detectedUsage = bucketDetails[detectedObject] ?? "لا توجد تفاصيل متوفرة"
                             prediction = "لم يتم التعرف على الكائن (\(Int(confidence))%)"
                         }
                         
@@ -121,7 +172,7 @@ struct ScanView: View {
     // MARK: - Reset Detection
     private func resetDetection() {
         detectedObject = ""
+        detectedUsage = ""
         prediction = "جارٍ المسح..."
     }
 }
-

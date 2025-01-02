@@ -34,9 +34,30 @@
 		1823149F2D082601001997CC /* Splash KABUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Splash KABUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		34C3B0AA2D250E8B00E78362 /* Exceptions for "Splash KAB" folder in "Splash KABTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				pillDetect1.mlmodel,
+			);
+			target = 182314942D082601001997CC /* Splash KABTests */;
+		};
+		34C3B0AB2D250E8B00E78362 /* Exceptions for "Splash KAB" folder in "Splash KABUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				pillDetect1.mlmodel,
+			);
+			target = 1823149E2D082601001997CC /* Splash KABUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		182314872D082600001997CC /* Splash KAB */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				34C3B0AA2D250E8B00E78362 /* Exceptions for "Splash KAB" folder in "Splash KABTests" target */,
+				34C3B0AB2D250E8B00E78362 /* Exceptions for "Splash KAB" folder in "Splash KABUITests" target */,
+			);
 			path = "Splash KAB";
 			sourceTree = "<group>";
 		};
@@ -409,7 +430,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Splash KAB/Preview Content\"";
-				DEVELOPMENT_TEAM = N2F7K9UJ7X;
+				DEVELOPMENT_TEAM = L9AS47JH55;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Splash-KAB-Info.plist";
@@ -426,7 +447,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = .Heba.com.SplashKAB;
+				PRODUCT_BUNDLE_IDENTIFIER = shamam.com.SplashKAB;
 				PRODUCT_NAME = Kabsoula;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -443,7 +464,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Splash KAB/Preview Content\"";
-				DEVELOPMENT_TEAM = N2F7K9UJ7X;
+				DEVELOPMENT_TEAM = L9AS47JH55;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Splash-KAB-Info.plist";
@@ -460,7 +481,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = .Heba.com.SplashKAB;
+				PRODUCT_BUNDLE_IDENTIFIER = shamam.com.SplashKAB;
 				PRODUCT_NAME = Kabsoula;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
