@@ -1,3 +1,10 @@
+//
+//  OnboardingView.swift
+//  Splash KAB
+//
+//  Created by Shamam Alkafri on 30/12/2024.
+//
+
 import SwiftUI
 
 struct OnboardingView: View {
