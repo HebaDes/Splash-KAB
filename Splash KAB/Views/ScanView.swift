@@ -23,6 +23,7 @@ struct ScanView: View {
         "Panadol": NSLocalizedString("Panadol: يستخدم لتخفيف الألم والحمى", comment: "Panadol description"),
         "Ibuprofen": NSLocalizedString("Ibuprofen: يستخدم لتقليل الالتهابات والألم", comment: "Ibuprofen description"),
         "Megamox": NSLocalizedString("Megamox: مضاد حيوي يستخدم لعلاج العدوى", comment: "Megamox description"),
+        "AziOnce": NSLocalizedString("AziOnce: مضاد حيوي يستخدم لعلاج العدوى", comment: "AziOnce description"),
         "Bucket1": NSLocalizedString("Bucket 1: وصف لدواء دلو 1", comment: "Bucket 1 description"),
         "Bucket2": NSLocalizedString("Bucket 2: وصف لدواء دلو 2", comment: "Bucket 2 description"),
         "Unknown": NSLocalizedString("Unknown: لا توجد تفاصيل متوفرة", comment: "Unknown description")
