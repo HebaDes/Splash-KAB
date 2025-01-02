@@ -36,6 +36,7 @@ struct ScanView: View {
             VStack {
                 Spacer()
 
+                // MARK: - Buttons
                 HStack {
                     // Static Pill Detection Button
                     Button(action: detectPillStatic) {
@@ -43,7 +44,7 @@ struct ScanView: View {
                             .font(.title2)
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, minHeight: 50)
-                            .background(Color.blue)
+                            .background(Color(red: 0.00, green: 0.74, blue: 0.83)) // #00BCD4
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -54,7 +55,7 @@ struct ScanView: View {
                             .font(.title2)
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, minHeight: 50)
-                            .background(Color.green)
+                            .background(Color(red: 0.10, green: 0.14, blue: 0.49)) // #1A237E
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -96,7 +97,7 @@ struct ScanView: View {
                         .fontWeight(.bold)
                         .padding()
                         .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(Color.red)
+                        .background(Color(red: 0.83, green: 0.18, blue: 0.18)) // #D32F2F
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
@@ -174,5 +175,13 @@ struct ScanView: View {
         detectedObject = ""
         detectedUsage = ""
         prediction = "جارٍ المسح..."
+    }
+}
+
+// MARK: - Preview
+struct ScanView_Previews: PreviewProvider {
+    static var previews: some View {
+        ScanView()
+            .previewDevice("iPhone 15 Pro")
     }
 }
