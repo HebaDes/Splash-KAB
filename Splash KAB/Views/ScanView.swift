@@ -20,13 +20,23 @@ struct ScanView: View {
 
     // Model-specific details
     let bucketDetails: [String: String] = [
-        "Panadol": NSLocalizedString("Panadol: يستخدم لتخفيف الألم والحمى", comment: "Panadol description"),
-        "Ibuprofen": NSLocalizedString("Ibuprofen: يستخدم لتقليل الالتهابات والألم", comment: "Ibuprofen description"),
-        "Megamox": NSLocalizedString("Megamox: مضاد حيوي يستخدم لعلاج العدوى", comment: "Megamox description"),
-        "AziOnce": NSLocalizedString("AziOnce: مضاد حيوي يستخدم لعلاج العدوى", comment: "AziOnce description"),
-        "Bucket1": NSLocalizedString("Bucket 1: وصف لدواء دلو 1", comment: "Bucket 1 description"),
-        "Bucket2": NSLocalizedString("Bucket 2: وصف لدواء دلو 2", comment: "Bucket 2 description"),
-        "Unknown": NSLocalizedString("Unknown: لا توجد تفاصيل متوفرة", comment: "Unknown description")
+        "Panadol": NSLocalizedString("بنادول: يستخدم لتخفيف الألم والحمى", comment: "Panadol description"),
+        "Ibuprofen": NSLocalizedString("ايبوبروفين: يستخدم لتقليل الالتهابات والألم", comment: "Ibuprofen description"),
+        "Megamox": NSLocalizedString("ميجاموكس: مضاد حيوي يستخدم لعلاج العدوى", comment: "Megamox description"),
+        "AziOnce": NSLocalizedString("ازي وانس: مضاد حيوي يستخدم لعلاج العدوى", comment: "AziOnce description"),
+        "Bucket1": NSLocalizedString("دلو 1: وصف لدواء دلو 1", comment: "Bucket 1 description"),
+        "Bucket2": NSLocalizedString("دلو 2: وصف لدواء دلو 2", comment: "Bucket 2 description"),
+        "Unknown": NSLocalizedString("غير معروف: لا توجد تفاصيل متوفرة", comment: "Unknown description")
+    ]
+
+    let bucketNames: [String: String] = [
+        "Panadol": "بنادول",
+        "Ibuprofen": "ايبوبروفين",
+        "Megamox": "ميجاموكس",
+        "AziOnce": "ازي وانس",
+        "Bucket1": "دلو 1",
+        "Bucket2": "دلو 2",
+        "Unknown": "غير معروف"
     ]
 
     // MARK: - Main Body
@@ -76,7 +86,7 @@ struct ScanView: View {
         }
         .sheet(isPresented: $showSheet) {
             VStack {
-                Text("اسم الحبة: \(detectedObject)")
+                Text("اسم الحبة: \(bucketNames[detectedObject] ?? "غير معروف")")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding()
@@ -150,9 +160,9 @@ struct ScanView: View {
                         if confidence >= 80 {
                             detectedObject = topResult.identifier
                             detectedUsage = bucketDetails[detectedObject] ?? "لا توجد تفاصيل متوفرة"
-                            prediction = "تم الكشف عن: \(detectedObject) (\(Int(confidence))%)"
+                            prediction = "تم الكشف عن: \(bucketNames[detectedObject] ?? detectedObject) (\(Int(confidence))%)"
                         } else {
-                            detectedObject = "غير معروف"
+                            detectedObject = "Unknown"
                             detectedUsage = bucketDetails[detectedObject] ?? "لا توجد تفاصيل متوفرة"
                             prediction = "لم يتم التعرف على الكائن (\(Int(confidence))%)"
                         }
